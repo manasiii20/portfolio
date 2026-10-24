@@ -427,6 +427,7 @@ img { display: block; max-width: 100%; }
   color: var(--blue);
 }
 .sticky--fold em { font-style: normal; background: #fff3c2; padding: 0 .15em; white-space: nowrap; }
+.nowrap { white-space: nowrap; }
 
 /* ==========================================================================
    Custom cursor — the Figma-style pointer from the live site
