@@ -312,10 +312,10 @@ img { display: block; max-width: 100%; }
   left: calc(46 * var(--u));
   top: calc(22 * var(--u));
   width: calc(284 * var(--u));
-  height: calc(204 * var(--u));
+  height: calc(186 * var(--u));
   display: block;
   padding: calc(42 * var(--u)) calc(26 * var(--u)) 0;
-  background: var(--blue);
+  background: var(--sticky-blue);
 }
 
 /* punched holes along the top, white like the selection handles */
@@ -338,35 +338,38 @@ img { display: block; max-width: 100%; }
   font-size: calc(21 * var(--u));
   line-height: var(--rule);
   letter-spacing: .02em;
-  color: #fff;
+  color: var(--blue);
   /* ruled lines sit just under each line of writing */
   background: linear-gradient(
       to bottom,
       transparent calc(var(--rule) - 6.5 * var(--u)),
-      rgba(255, 255, 255, .26) calc(var(--rule) - 6.5 * var(--u)) calc(var(--rule) - 5 * var(--u)),
+      rgba(19, 95, 236, .2) calc(var(--rule) - 6.5 * var(--u)) calc(var(--rule) - 5 * var(--u)),
       transparent calc(var(--rule) - 5 * var(--u))
     ) 0 0 / 100% var(--rule) repeat-y;
 }
 
-/* ---- prev @ Bosch ----------------------------------------------------------- */
+/* ---- prev @ Bosch — the original note from the live site -------------------- */
 .sticky--pink {
-  --rest: 5deg;
-  --hover: 11deg;
-  --drag: 15deg;
-  left: calc(374 * var(--u));
-  top: calc(48 * var(--u));
-  width: calc(112 * var(--u));
-  height: calc(102 * var(--u));
+  --rest: 8deg;
+  --hover: 16deg;
+  --drag: 22deg;
+  left: calc(356 * var(--u));
+  top: calc(28 * var(--u));
+  width: calc(135 * var(--u));
+  height: calc(135 * var(--u));
   background: var(--sticky-pink);
-  align-content: center;
-  gap: calc(1 * var(--u));
+}
+
+.sticky--pink .sticky__text {
+  width: calc(79 * var(--u));
   font-family: var(--font-hand);
   font-weight: 700;
+  font-size: calc(17 * var(--u));
+  line-height: calc(20.4 * var(--u));
   color: var(--ink-sticky);
   text-align: center;
+  white-space: pre-wrap;
 }
-.sticky--pink small { font-size: calc(16 * var(--u)); line-height: 1; }
-.sticky--pink strong { font-size: calc(30 * var(--u)); line-height: 1; letter-spacing: .02em; }
 
 /* ---- the lego me --------------------------------------------------------- */
 .sticky--photo {
@@ -389,11 +392,11 @@ img { display: block; max-width: 100%; }
   --hover: 6.5deg;
   --drag: 9deg;
   --fold: calc(30 * var(--u));
-  left: calc(222 * var(--u));
-  top: calc(212 * var(--u));
-  width: calc(266 * var(--u));
-  height: calc(118 * var(--u));
-  padding: 0 calc(24 * var(--u)) calc(4 * var(--u));
+  left: calc(208 * var(--u));
+  top: calc(204 * var(--u));
+  width: calc(284 * var(--u));
+  height: calc(128 * var(--u));
+  padding: 0 calc(20 * var(--u)) calc(4 * var(--u)) calc(22 * var(--u));
   justify-items: start;
   background: var(--sticky-blue);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fold)), calc(100% - var(--fold)) 100%, 0 100%);
@@ -416,9 +419,9 @@ img { display: block; max-width: 100%; }
 
 .sticky--fold .sticky__text {
   font-family: var(--font-mono);
-  font-size: calc(12.5 * var(--u));
+  font-size: calc(14 * var(--u));
   line-height: 1.5;
-  letter-spacing: .01em;
+  letter-spacing: 0;
   color: var(--blue);
 }
 .sticky--fold em { font-style: normal; background: #fff3c2; padding: 0 .2em; white-space: nowrap; }
@@ -524,7 +527,7 @@ img { display: block; max-width: 100%; }
   .hero__note { font-size: 12px; line-height: 15px; bottom: 18px; right: var(--pad); }
 
   .stickies { --s: .64; margin-top: 40px; }
-  .sticky--fold .sticky__text { font-size: 9.5px; }
+  .sticky--fold .sticky__text { font-size: 10.5px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
