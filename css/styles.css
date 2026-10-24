@@ -269,7 +269,7 @@ img { display: block; max-width: 100%; }
   --s: 1;
   --u: calc(var(--s) * 1px);
   position: absolute;
-  right: var(--pad);
+  right: calc(var(--pad) + 80 * var(--u));
   top: calc(297px - 185 * var(--u));   /* centred on the intro copy */
   width: calc(500 * var(--u));
   height: calc(370 * var(--u));
@@ -290,7 +290,7 @@ img { display: block; max-width: 100%; }
   user-select: none;
   -webkit-user-select: none;
   cursor: move;
-  transition: transform var(--spring-time) var(--spring), box-shadow var(--spring-time) var(--spring), filter var(--spring-time) var(--spring);
+  transition: transform var(--spring-time) var(--spring), box-shadow var(--spring-time) var(--spring);
 }
 
 .sticky:hover,
@@ -300,6 +300,23 @@ img { display: block; max-width: 100%; }
   --rot: var(--drag);
   --scale: var(--lift-drag);
   box-shadow: var(--sticky-shadow-drag);
+}
+
+/* on load each note swings in from a big tilt, overshoots and springs back,
+   like the stickies on the live site */
+.sticky {
+  animation: sticky-in 1s var(--in-delay, 1s) cubic-bezier(.3, .7, .4, 1) backwards;
+}
+.sticky--card  { --spin: 40deg;  --in-delay: .9s; }
+.sticky--photo { --spin: -34deg; --in-delay: 1s; }
+.sticky--fold  { --spin: 30deg;  --in-delay: 1.1s; }
+
+@keyframes sticky-in {
+  0%   { opacity: 0; transform: perspective(1200px) rotate(calc(var(--rest) + var(--spin))) translateY(24px) scale(1); }
+  22%  { opacity: 1; }
+  45%  { transform: perspective(1200px) rotate(calc(var(--rest) - var(--spin) * .3)) translateY(-4px) scale(1); }
+  72%  { transform: perspective(1200px) rotate(calc(var(--rest) + var(--spin) * .08)) translateY(0) scale(1); }
+  100% { opacity: 1; transform: perspective(1200px) rotate(var(--rest)) translateY(0) scale(1); }
 }
 
 /* once a note has been picked up and dropped, it settles down straight */
@@ -377,14 +394,19 @@ img { display: block; max-width: 100%; }
   height: calc(122 * var(--u));
   padding: 0 calc(14 * var(--u)) calc(4 * var(--u)) calc(22 * var(--u));
   justify-items: start;
+}
+
+/* the paper, with its bottom-right corner cut away */
+.sticky--fold::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: var(--sticky-blue);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fold)), calc(100% - var(--fold)) 100%, 0 100%);
-  /* a clipped box drops its box-shadow, so the shadow follows the paper's shape */
-  box-shadow: none;
-  filter: drop-shadow(0 7px 6px rgba(193, 192, 204, .45));
 }
-.sticky--fold.is-dragging { box-shadow: none; filter: drop-shadow(0 12px 9px rgba(40, 30, 150, .3)); }
 
+/* the corner folded over */
 .sticky--fold::after {
   content: "";
   position: absolute;
@@ -404,8 +426,7 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0;
   color: var(--blue);
 }
-.sticky--fold em { font-style: normal; background: #fff3c2; padding: 0 .15em; }
-.nowrap { white-space: nowrap; }
+.sticky--fold em { font-style: normal; background: #fff3c2; padding: 0 .15em; white-space: nowrap; }
 
 /* ==========================================================================
    Custom cursor — the Figma-style pointer from the live site
