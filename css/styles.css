@@ -398,7 +398,7 @@ img { display: block; max-width: 100%; }
   height: calc(128 * var(--u));
   padding: 0 calc(20 * var(--u)) calc(4 * var(--u)) calc(22 * var(--u));
   justify-items: start;
-  background: var(--sticky-blue);
+  background: var(--blue);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fold)), calc(100% - var(--fold)) 100%, 0 100%);
   /* a clipped box drops its box-shadow, so the shadow follows the paper's shape */
   box-shadow: none;
@@ -413,7 +413,7 @@ img { display: block; max-width: 100%; }
   bottom: 0;
   width: var(--fold);
   height: var(--fold);
-  background: var(--blue);
+  background: #0b45b3;   /* the underside of the fold, a shade deeper */
   clip-path: polygon(0 0, 100% 0, 0 100%);
 }
 
@@ -422,9 +422,9 @@ img { display: block; max-width: 100%; }
   font-size: calc(14 * var(--u));
   line-height: 1.5;
   letter-spacing: 0;
-  color: var(--blue);
+  color: #fff;
 }
-.sticky--fold em { font-style: normal; background: #fff3c2; padding: 0 .2em; white-space: nowrap; }
+.sticky--fold em { font-style: normal; background: #fff3c2; color: var(--blue); padding: 0 .2em; white-space: nowrap; }
 
 /* ==========================================================================
    Custom cursor — the Figma-style pointer from the live site
