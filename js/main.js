@@ -1,9 +1,19 @@
 /* ==========================================================================
-   Four hats — click a pill to swap it into the title.
-   Edit the copy here; `pill` is how it reads in the grey chip,
-   `title` is how it reads inside the selected text box.
+   Four hats. They sit in a loop: the title shows one, the three pills show
+   the next three in order. Clicking a pill makes it the title and the pills
+   roll round to whatever follows it. Copy is from manasivinze.com.
    ========================================================================== */
 const HATS = [
+  {
+    pill: "ux designer",
+    title: "UX Designer",
+    desc: "who knows her tools on both sides, running the research and converting it into design",
+  },
+  {
+    pill: "system thinker",
+    title: "System Thinker",
+    desc: "who moves between the pixel and the whole system, and gets more interested the wider it gets",
+  },
   {
     pill: "product designer",
     title: "Product Designer",
@@ -11,102 +21,81 @@ const HATS = [
   },
   {
     pill: "a creative :)",
-    title: "A Creative :)",
-    desc: "who doodles, builds tiny lego worlds, and keeps finding playful ways to make everyday things feel a little more delightful",
-  },
-  {
-    pill: "ux designer",
-    title: "UX Designer",
-    desc: "who sits with the messy bits of research until the real problem shows up, then designs for the people living with it",
-  },
-  {
-    pill: "system thinker",
-    title: "System Thinker",
-    desc: "who zooms out to map how people, tools and processes connect, before touching a single pixel",
+    title: "a creative :)",
+    desc: "whose 10-year-old self scribbled to get things out of her head, and she still does, except now they run",
   },
 ];
 
-const OUT_MS = 170;
-const IN_MS = 380;
-
-const state = {
-  title: 0,          // index into HATS shown in the box
-  slots: [1, 2, 3],  // indexes shown in the three pills, left → right
-  busy: false,
-};
+let current = 0; // index into HATS shown in the title box
 
 const pills = [...document.querySelectorAll("[data-slot]")];
 const box = document.querySelector(".title-box");
 const titleText = document.querySelector("[data-hat-title]");
 const desc = document.querySelector("[data-hat-desc]");
 
+const hatAt = (offset) => HATS[(current + offset) % HATS.length];
+
 function render() {
-  titleText.textContent = HATS[state.title].title;
-  desc.textContent = HATS[state.title].desc;
+  titleText.textContent = hatAt(0).title;
+  desc.textContent = hatAt(0).desc;
   pills.forEach((pill, i) => {
-    const hat = HATS[state.slots[i]];
+    const hat = hatAt(i + 1);
     pill.textContent = hat.pill;
     pill.setAttribute("aria-label", `Swap to ${hat.title}`);
   });
 }
 
-const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+// text swaps instantly; the boxes glide from their old width to the new one
+function swapTo(next) {
+  const boxes = [box, ...pills];
+  const from = boxes.map((el) => el.getBoundingClientRect().width);
 
-async function swap(slot) {
-  if (state.busy) return;
-  state.busy = true;
-
-  const pill = pills[slot];
-  const fromWidth = box.offsetWidth;
-
-  pill.classList.add("is-out");
-  titleText.classList.add("is-out");
-  desc.classList.add("is-out");
-  await wait(OUT_MS);
-
-  [state.title, state.slots[slot]] = [state.slots[slot], state.title];
-
-  // measure the box at its new natural width, then animate to it
-  box.style.width = "";
+  boxes.forEach((el) => (el.style.width = ""));
+  current = next;
   render();
-  const toWidth = box.offsetWidth;
-  box.style.width = `${fromWidth}px`;
+  const to = boxes.map((el) => el.getBoundingClientRect().width);
+
+  boxes.forEach((el, i) => {
+    el.style.transition = "none";
+    el.style.width = `${from[i]}px`;
+  });
   box.offsetWidth; // flush so the transition starts from the old width
-  box.style.width = `${toWidth}px`;
-
-  pill.classList.replace("is-out", "is-in");
-  titleText.classList.replace("is-out", "is-in");
-  desc.classList.remove("is-out");
-  await wait(IN_MS);
-
-  pill.classList.remove("is-in");
-  titleText.classList.remove("is-in");
-  box.style.width = "";
-  state.busy = false;
+  boxes.forEach((el, i) => {
+    el.style.transition = "";
+    el.style.width = `${to[i]}px`;
+  });
 }
 
-pills.forEach((pill, i) => pill.addEventListener("click", () => swap(i)));
+// once settled, hand the width back to the content
+[box, ...pills].forEach((el) =>
+  el.addEventListener("transitionend", (e) => {
+    if (e.propertyName === "width") el.style.width = "";
+  })
+);
+
+pills.forEach((pill, i) =>
+  pill.addEventListener("click", () => swapTo((current + i + 1) % HATS.length))
+);
 render();
 
 /* ==========================================================================
-   Sticky notes — pick up, drag anywhere inside the hero, drop.
+   Sticky notes — pick up, drag anywhere, drop.
    ========================================================================== */
-const stage = document.querySelector("[data-sticky-stage]");
 const hero = document.querySelector(".hero");
 const stickies = [...document.querySelectorAll(".sticky")];
 let topZ = 10;
 
 const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
 
-// the area a note may sit in, in the stage's coordinate space
+// keep notes on the page: anywhere vertically, never past the side edges
 function bounds(el) {
-  const s = stage.getBoundingClientRect();
   const h = hero.getBoundingClientRect();
+  const page = document.documentElement;
   return {
-    minX: h.left - s.left,
-    minY: h.top - s.top,
-    maxX: h.right - s.left - el.offsetWidth,
-    maxY: h.bottom - s.top - el.offsetHeight,
+    minX: -h.left,
+    maxX: page.clientWidth - h.left - el.offsetWidth,
+    minY: -(h.top + window.scrollY),
+    maxY: page.scrollHeight - (h.top + window.scrollY) - el.offsetHeight,
   };
 }
 
@@ -118,40 +107,28 @@ function place(el, x, y) {
   el.style.bottom = "auto";
 }
 
-function raise(el) {
-  el.style.zIndex = ++topZ;
-}
-
 stickies.forEach((el) => {
   let start = null;
-  let lastX = 0;
-  let tilt = 0;
 
   el.addEventListener("pointerdown", (e) => {
     if (e.button !== 0) return;
     e.preventDefault();
     el.setPointerCapture(e.pointerId);
-    raise(el);
+    el.style.zIndex = ++topZ;
     start = { px: e.clientX, py: e.clientY, x: el.offsetLeft, y: el.offsetTop };
-    lastX = e.clientX;
-    tilt = 0;
     el.classList.add("is-dragging");
   });
 
   el.addEventListener("pointermove", (e) => {
     if (!start) return;
     place(el, start.x + e.clientX - start.px, start.y + e.clientY - start.py);
-    // lean a little into the direction of travel, like paper catching air
-    tilt = clamp(tilt * 0.7 + (e.clientX - lastX) * 0.5, -6, 6);
-    lastX = e.clientX;
-    el.style.setProperty("--tilt", `${tilt.toFixed(2)}deg`);
   });
 
   const drop = () => {
     if (!start) return;
     start = null;
     el.classList.remove("is-dragging");
-    el.style.removeProperty("--tilt");
+    el.classList.add("was-dragged");
   };
   el.addEventListener("pointerup", drop);
   el.addEventListener("pointercancel", drop);
@@ -163,12 +140,12 @@ stickies.forEach((el) => {
     const move = moves[e.key];
     if (!move) return;
     e.preventDefault();
-    raise(el);
+    el.style.zIndex = ++topZ;
     place(el, el.offsetLeft + move[0], el.offsetTop + move[1]);
   });
 });
 
-// keep dropped notes inside the hero when the window shrinks
+// keep dropped notes on the page when the window shrinks
 window.addEventListener("resize", () => {
   stickies.forEach((el) => {
     if (el.style.left) place(el, el.offsetLeft, el.offsetTop);
@@ -176,10 +153,35 @@ window.addEventListener("resize", () => {
 });
 
 // crossing a layout breakpoint puts the notes back where the layout wants them
-["(max-width: 1100px)", "(max-width: 640px)", "(max-width: 1320px)"].forEach((q) => {
+["(max-width: 1199px)", "(max-width: 899px)", "(max-width: 640px)"].forEach((q) => {
   window.matchMedia(q).addEventListener("change", () => {
-    stickies.forEach((el) => {
-      ["left", "top", "right", "bottom"].forEach((p) => el.style.removeProperty(p));
-    });
+    stickies.forEach((el) => ["left", "top", "right", "bottom"].forEach((p) => el.style.removeProperty(p)));
   });
 });
+
+/* ==========================================================================
+   Custom cursor — a Figma pointer that becomes a move icon over the notes
+   and carries a little name tag over things that are on their way.
+   ========================================================================== */
+const cursor = document.querySelector(".cursor");
+const tag = cursor.querySelector(".cursor__tag");
+const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+if (finePointer.matches) {
+  document.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse") return;
+    document.documentElement.classList.add("has-cursor");
+    cursor.classList.add("is-visible");
+    cursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 11.5}px)`;
+
+    const target = e.target instanceof Element ? e.target : null;
+    const dragging = document.querySelector(".sticky.is-dragging");
+    cursor.classList.toggle("is-move", Boolean(dragging || target?.closest(".sticky")));
+
+    const tagged = target?.closest("[data-cursor-tag]");
+    cursor.classList.toggle("has-tag", Boolean(tagged));
+    if (tagged) tag.textContent = tagged.dataset.cursorTag;
+  });
+
+  document.documentElement.addEventListener("mouseleave", () => cursor.classList.remove("is-visible"));
+}

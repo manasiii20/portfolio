@@ -1,9 +1,10 @@
 /* ==========================================================================
-   Tokens
+   Tokens — values taken from the live Framer site (manasivinze.com)
    ========================================================================== */
 :root {
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-sans: "Google Sans Flex", "Google Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-note: "Google Sans", "Google Sans Flex", system-ui, sans-serif;
   --font-hand: "Gaegu", "Comic Sans MS", cursive;
 
   --bg: #ffffff;
@@ -13,21 +14,22 @@
   --ink-nav: #828282;      /* nav chips */
   --ink-soft: #b7b8bd;     /* footnote */
   --ink-hand: #86888f;     /* annotations */
-  --ink-sticky: #595959;
-  --chip: #f2f2f2;
-  --chip-hover: #e9e9e9;
+  --ink-sticky: #5e5e5e;
+  --chip: #f1f1f1;
   --blue: #135fec;
-  --flower: #1868e3;
-  --flower-center: #fcc64b;
   --select: #fec901;
   --sticky-yellow: #faf0d1;
   --sticky-pink: #fde6e6;
+  --sticky-shadow: 0 22px 15px -15.4px rgba(193, 192, 204, .28);
+  --sticky-shadow-drag: 0 24.5px 13.7px -13.6px rgba(40, 30, 150, .35);
 
-  --gutter: clamp(16px, 3.9vw, 74px);   /* white space outside the frame lines */
-  --pad: clamp(20px, 3.95vw, 75px);     /* space inside the frame lines */
-  --nav-h: 80px;
+  --gutter: 59px;   /* white space outside the frame lines */
+  --pad: 60px;      /* space inside the frame lines */
+  --nav-h: 65px;   /* 64 + the hairline */
 
-  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  /* springy settle, a hair of overshoot like Framer's default spring */
+  --spring: cubic-bezier(.25, 1.2, .5, 1);
+  --spring-time: .32s;
 }
 
 /* ==========================================================================
@@ -44,11 +46,8 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
-  /* Google Sans Flex reads a touch roomier at a small optical size */
-  font-variation-settings: "opsz" 12;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
 p, h1, ul { margin: 0; }
@@ -67,7 +66,7 @@ img { display: block; max-width: 100%; }
 :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 
 /* ==========================================================================
-   Frame — the two vertical hairlines running down the page
+   Frame — the hairlines running down both sides of the page
    ========================================================================== */
 .frame {
   margin-inline: var(--gutter);
@@ -76,27 +75,38 @@ img { display: block; max-width: 100%; }
 }
 
 /* ==========================================================================
-   Chips (nav + hat pills share the same grey block look)
+   Chips (nav + hat pills share the grey block look)
    ========================================================================== */
 .chip {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   background: var(--chip);
   font-family: var(--font-mono);
-  font-size: 15px;
-  letter-spacing: .04em;
-  line-height: 1;
+  font-size: 13px;
+  line-height: 15.6px;
   white-space: nowrap;
-  transition: background-color .2s ease, color .2s ease;
 }
 
 .chip--nav {
-  height: 33px;
-  padding: 0 18px;
+  padding: 5.6px 13.4px;
   color: var(--ink-nav);
+  transition: color .2s ease;
 }
-.chip--nav:hover { background: var(--chip-hover); color: #555; }
+
+/* on hover the chip turns blue and grows a little ↗ */
+.chip__arrow {
+  width: 0;
+  height: 9px;
+  margin-left: 0;
+  fill: var(--blue);
+  opacity: 0;
+  flex: none;
+  transition: width var(--spring-time) var(--spring), margin var(--spring-time) var(--spring), opacity .2s ease;
+}
+.chip--nav:hover,
+.chip--nav:focus-visible { color: var(--blue); font-weight: 500; }
+.chip--nav:hover .chip__arrow,
+.chip--nav:focus-visible .chip__arrow { width: 9px; margin-left: 10.2px; opacity: 1; }
 
 /* ==========================================================================
    Nav
@@ -113,169 +123,139 @@ img { display: block; max-width: 100%; }
 .nav__group {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
 }
-.nav__group:last-child { gap: 32px; }
+.nav__group:last-child { gap: 25px; }
 
 .logo {
   display: block;
-  width: 36px;
-  height: 36px;
-  margin-top: 1px;
+  width: 29px;
+  height: 29px;
 }
-.logo svg { width: 100%; height: 100%; overflow: visible; transition: transform .6s var(--ease-out); }
-.logo__petals { fill: var(--flower); }
-.logo__center { fill: var(--flower-center); }
-.logo:hover svg { transform: rotate(72deg); }
+.logo img {
+  width: 100%;
+  height: 100%;
+  transform: rotate(103deg);
+  transition: transform .4s var(--spring);
+}
+.logo:hover img { transform: rotate(253deg); }
 
 /* ==========================================================================
    Hero
    ========================================================================== */
 .hero {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: max(640px, calc(100vh - var(--nav-h)));
-  padding-inline: var(--pad);
+  height: 634px;
+  padding: 193px var(--pad) 0;
   border-bottom: 1px solid var(--line);
 }
 
-.hero__row {
+.hero__intro {
   position: relative;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  padding-top: 21px;
+  z-index: 2;
+  width: 434px;
+  max-width: 100%;
 }
 
-.hero__intro { position: relative; z-index: 2; }
-
 .hero__hi {
-  font-size: 23px;
-  line-height: 30px;
-  font-weight: 400;
-  letter-spacing: -.005em;
-  margin-bottom: 19px;
+  font-size: 19px;
+  line-height: 22.8px;
+  letter-spacing: .03em;
 }
 
 /* ---- hats ---------------------------------------------------------------- */
-.hats { position: relative; width: fit-content; }
+.hats {
+  position: relative;
+  width: fit-content;
+  margin-top: 16px;
+}
 
 .hats__pills {
   display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  perspective: 600px;
+  gap: 12px;
 }
 
 .chip--hat {
-  height: 35px;
-  padding: 0 17px;
+  justify-content: center;
+  padding: 6px 13px;
   color: var(--ink-mono);
-  transform-style: preserve-3d;
-  will-change: transform;
+  overflow: hidden;
+  transition: color .2s ease, width var(--spring-time) var(--spring);
 }
-.chip--hat:hover { background: var(--chip-hover); color: var(--blue); }
-.chip--hat:active { transform: scale(.97); }
-
-/* the "rotate" when a pill swaps: spins away on X, text changes, spins back */
-.chip--hat.is-out { animation: flip-out .18s ease-in forwards; }
-.chip--hat.is-in  { animation: flip-in .34s var(--ease-out) both; }
-
-@keyframes flip-out { to   { transform: rotateX(90deg); } }
-@keyframes flip-in  { from { transform: rotateX(-90deg); } to { transform: rotateX(0); } }
+.chip--hat:hover,
+.chip--hat:focus-visible { color: var(--blue); }
 
 /* ---- hand-written annotation --------------------------------------------- */
 /* hangs off the end of the pill row, so it follows when pill widths change */
 .annotation {
   position: absolute;
-  left: calc(100% + 49px);
-  top: -48px;
-  width: 160px;
+  left: calc(100% + 24px);
+  top: -39px;
+  width: 136px;
   pointer-events: none;
   user-select: none;
-  transition: left .38s var(--ease-out);
-}
-
-.annotation__text {
   font-family: var(--font-hand);
-  font-size: 19px;
-  line-height: 20px;
-  letter-spacing: .085em;
+  font-size: 16px;
+  line-height: 15.4px;
+  letter-spacing: .04em;
   color: var(--ink-hand);
   text-align: center;
 }
+.annotation p { white-space: pre-wrap; }
 
 .annotation__arrow {
-  display: block;
-  width: 32px;
-  height: 40px;
-  margin: 3px 0 0 -7px;
-  stroke: var(--select);
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  width: 22px;
+  height: 26.7px;
+  margin-top: 7.5px;
 }
 
-/* ---- Figma-ish selected text box ------------------------------------------ */
+/* ---- Figma-style selected text box ---------------------------------------- */
 .title-box {
   position: relative;
   display: inline-block;
-  margin: 39px 0 0 6px;
-  padding: 11px 24px 11px 25px;
+  margin: 31px 0 0 6px;
+  padding: 7.5px 19.2px;
   border: 1px solid var(--select);
   font-family: var(--font-mono);
-  font-size: 26px;
-  line-height: 28px;
-  font-weight: 500;
-  letter-spacing: 0;
+  font-size: 21px;
+  line-height: 25.2px;
+  font-weight: 600;
   color: var(--blue);
   white-space: nowrap;
-  transition: width .38s var(--ease-out);
+  transition: width var(--spring-time) var(--spring);
 }
-
-.title-box__text { display: inline-block; will-change: transform, opacity; }
-.title-box__text.is-out { animation: title-out .16s ease-in forwards; }
-.title-box__text.is-in  { animation: title-in .36s var(--ease-out) both; }
-
-@keyframes title-out { to   { opacity: 0; transform: translateY(-40%) rotateX(70deg); } }
-@keyframes title-in  { from { opacity: 0; transform: translateY(40%) rotateX(-70deg); } }
 
 .title-box__handle {
   position: absolute;
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   background: #fff;
   border: 1px solid var(--select);
 }
-.title-box__handle--tl { top: -4px;    left: -4px; }
-.title-box__handle--tr { top: -4px;    right: -4px; }
-.title-box__handle--bl { bottom: -4px; left: -4px; }
-.title-box__handle--br { bottom: -4px; right: -4px; }
+.title-box__handle--tl { top: -3.5px;    left: -3.5px; }
+.title-box__handle--tr { top: -3.5px;    right: -3.5px; }
+.title-box__handle--bl { bottom: -3.5px; left: -3.5px; }
+.title-box__handle--br { bottom: -3.5px; right: -3.5px; }
 
 /* ---- description ---------------------------------------------------------- */
 .hero__desc {
-  max-width: 548px;
-  margin-top: 30px;
-  font-size: 21px;
-  line-height: 31px;
-  font-weight: 400;
-  transition: opacity .2s ease, transform .2s ease;
+  margin-top: 24.7px;
+  font-size: 17px;
+  line-height: 24.8px;
+  letter-spacing: .03em;
 }
-.hero__desc.is-out { opacity: 0; transform: translateY(6px); }
 
 /* ---- footnote ------------------------------------------------------------- */
 .hero__note {
-  padding: 18px 0 27px;
-  font-size: 17px;
-  line-height: 20px;
-  color: var(--ink-soft);
+  position: absolute;
+  left: var(--pad);
+  bottom: 22px;
+  font-family: var(--font-note);
   font-style: italic;
-  font-variation-settings: "opsz" 12, "slnt" -10;
-}
-@supports (font-variation-settings: "slnt" -10) {
-  /* use the real slant axis instead of the browser's fake italic */
-  .hero__note { font-style: normal; }
+  font-size: 14px;
+  line-height: 16.8px;
+  letter-spacing: .03em;
+  color: var(--ink-soft);
 }
 
 /* ==========================================================================
@@ -283,110 +263,165 @@ img { display: block; max-width: 100%; }
    ========================================================================== */
 .sticky {
   --rot: 0deg;
-  --lift: 1;
+  --scale: 1;
   position: absolute;
   z-index: 3;
   display: grid;
   place-items: center;
-  transform: rotate(var(--rot)) scale(var(--lift));
-  box-shadow:
-    0 22px 18px -16px rgba(0, 0, 0, .10),
-    0 4px 10px -6px rgba(0, 0, 0, .05);
-  cursor: grab;
+  transform: perspective(1200px) rotate(var(--rot)) scale(var(--scale));
+  box-shadow: var(--sticky-shadow);
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
-  transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out);
+  cursor: move;
+  transition: transform var(--spring-time) var(--spring), box-shadow var(--spring-time) var(--spring);
 }
-.sticky:hover { --lift: 1.015; }
-.sticky:focus-visible { outline-offset: 6px; }
 
-.sticky.is-dragging {
-  --lift: 1.05;
-  cursor: grabbing;
-  transform: rotate(calc(var(--rot) + var(--tilt, 0deg))) scale(var(--lift));
-  box-shadow:
-    0 34px 28px -18px rgba(0, 0, 0, .16),
-    0 8px 16px -8px rgba(0, 0, 0, .08);
-  transition: transform .2s var(--ease-out), box-shadow .2s var(--ease-out);
+.sticky--pink {
+  --rest: 8deg;
+  --hover: 16deg;
+  --drag: 22deg;
+  --rot: var(--rest);
+  width: 135px;
+  height: 135px;
+  right: 257px;
+  top: 268px;
+  background: var(--sticky-pink);
 }
 
 .sticky--photo {
-  width: 159px;
-  height: 159px;
-  right: 106px;
-  top: calc(50% - 133px);
+  --rest: -6deg;
+  --hover: -6deg;
+  --drag: 0deg;
+  --rot: var(--rest);
+  width: 127px;
+  height: 127px;
+  right: 145px;
+  top: 183px;
   background: var(--sticky-yellow);
 }
-.sticky--photo img { width: 96px; height: auto; pointer-events: none; }
+/* on the live site the photo note straightens out once it has been moved */
+.sticky--photo.was-dragged { --rest: 0deg; --hover: 0deg; }
 
-.sticky--pink {
-  --rot: 8deg;
-  width: 169px;
-  height: 169px;
-  right: 246px;
-  top: calc(50% - 29px);
-  background: var(--sticky-pink);
+.sticky:hover,
+.sticky:focus-visible { --rot: var(--hover); --scale: 1.05; }
+
+.sticky.is-dragging {
+  --rot: var(--drag);
+  --scale: 1.1;
+  box-shadow: var(--sticky-shadow-drag);
 }
+
+.sticky--photo img { width: 62px; height: auto; pointer-events: none; }
 
 .sticky__text {
   font-family: var(--font-hand);
   font-weight: 700;
-  font-size: 20px;
-  line-height: 24px;
-  letter-spacing: .05em;
+  width: 79px;
+  font-size: 17px;
+  line-height: 20.4px;
   color: var(--ink-sticky);
   text-align: center;
-  transform: rotate(-2deg);
+  white-space: pre-wrap;
+}
+
+/* ==========================================================================
+   Custom cursor — the Figma-style pointer from the live site
+   ========================================================================== */
+.cursor { display: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * { cursor: none !important; }
+
+  .cursor {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    width: 20px;
+    height: 23px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s ease;
+  }
+  .cursor.is-visible { opacity: 1; }
+
+  .cursor__pointer {
+    width: 20px;
+    height: 23px;
+    object-fit: contain;
+  }
+
+  .cursor__move {
+    position: absolute;
+    left: -5px;
+    top: 3px;
+    width: 30px;
+    height: 17px;
+    max-width: none;
+    display: none;
+  }
+  .cursor.is-move .cursor__pointer { display: none; }
+  .cursor.is-move .cursor__move { display: block; }
+
+  .cursor__tag {
+    position: absolute;
+    left: 16px;
+    top: 20px;
+    padding: 4.33px 10.4px;
+    background: var(--blue);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 13.2px;
+    white-space: nowrap;
+    display: none;
+  }
+  .cursor.has-tag .cursor__tag { display: block; }
 }
 
 /* ==========================================================================
    Responsive
    ========================================================================== */
-@media (max-width: 1320px) {
-  .sticky--photo { right: 10px; }
-  .sticky--pink  { right: 140px; }
+@media (max-width: 1199px) {
+  :root { --gutter: 39px; --pad: 40px; --nav-h: 59px; }
+  .chip--nav { font-size: 11px; line-height: 13.2px; padding: 5px 12px; }
+  .hero { padding-top: 141px; height: 562px; }
+  .sticky--pink  { width: 105px; height: 105px; right: 268px; top: 252px; }
+  .sticky--photo { width: 100px; height: 100px; right: 150px; top: 168px; }
+  .sticky--photo img { width: 49px; }
+  .sticky__text { width: 64px; font-size: 14px; line-height: 17px; }
 }
 
-@media (max-width: 1100px) {
-  .hero__row {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 64px;
-  }
-  .hats__pills { max-width: 520px; }
-  .annotation { position: static; width: auto; display: flex; align-items: flex-end; gap: 6px; margin-top: 14px; }
-  .annotation__text { text-align: left; }
-  .annotation__text br { display: none; }
-  .annotation__arrow { order: -1; margin: 0; width: 22px; height: 26px; transform: scaleX(-1) rotate(180deg); }
-
-  /* stickies drop below the copy, still free to drag */
-  .hero__row { padding-bottom: 300px; }
-  .sticky--photo { right: auto; left: 190px; top: auto; bottom: 90px; }
-  .sticky--pink  { right: auto; left: 30px;  top: auto; bottom: 40px; }
+@media (max-width: 899px) {
+  .hero { height: auto; padding-top: 72px; padding-bottom: 340px; }
+  .annotation { position: static; width: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; margin-top: 12px; text-align: left; }
+  .annotation p { white-space: normal; }
+  .annotation__arrow { order: -1; margin: 0 4px 0 0; transform: rotate(150deg); width: 18px; height: 22px; }
+  .sticky--pink  { right: auto; left: calc(var(--pad) + 10px); top: auto; bottom: 90px; }
+  .sticky--photo { right: auto; left: calc(var(--pad) + 140px); top: auto; bottom: 150px; }
 }
 
 @media (max-width: 640px) {
-  :root { --gutter: 16px; --pad: 16px; }
-  .nav { gap: 12px; }
+  :root { --gutter: 16px; --pad: 18px; --nav-h: 57px; }
   .nav__group { gap: 8px; }
   .nav__group:last-child { gap: 12px; }
-  .chip--nav { height: 30px; padding: 0 9px; font-size: 13px; }
-  .logo { width: 28px; height: 28px; }
+  .chip--nav { padding: 5px 9px; }
+  .chip--nav:hover .chip__arrow { width: 0; margin: 0; }
+  .logo { width: 24px; height: 24px; }
 
-  .hero__row { padding-top: 48px; }
-  .hero__hi { font-size: 21px; }
-  .hats__pills { gap: 10px; }
-  .chip--hat { font-size: 14px; padding: 0 13px; }
-  .title-box { font-size: 22px; padding: 10px 18px; margin-top: 30px; }
-  .hero__desc { font-size: 19px; line-height: 28px; }
-  .hero__note { font-size: 15px; }
+  .hero { padding-top: 56px; padding-bottom: 300px; }
+  .hero__hi { font-size: 16px; line-height: 19.2px; }
+  .hats__pills { flex-wrap: wrap; gap: 8px; }
+  .chip--hat { font-size: 12px; padding: 6px 10px; }
+  .title-box { font-size: 18px; line-height: 22px; margin-top: 24px; }
+  .hero__desc { font-size: 14px; line-height: 20.4px; margin-top: 18px; }
+  .hero__note { font-size: 12px; line-height: 15px; bottom: 18px; right: var(--pad); }
 
-  .hero__row { padding-bottom: 250px; }
-  .sticky--photo { width: 136px; height: 136px; left: auto; right: 4px; bottom: 80px; }
-  .sticky--photo img { width: 82px; }
-  .sticky--pink  { width: 144px; height: 144px; left: 6px; bottom: 30px; }
+  .sticky--pink  { left: calc(var(--pad) + 4px); bottom: 80px; }
+  .sticky--photo { left: auto; right: calc(var(--pad) + 4px); bottom: 130px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -3,91 +3,82 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Manasi — Product Designer</title>
-  <meta name="description" content="Manasi is a product designer who looks beyond the interface at the moving parts underneath, and what makes it work." />
+  <title>Manasi's Portfolio</title>
+  <meta name="description" content="Manasi is a UX designer who knows her tools on both sides, running the research and converting it into design." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Geist+Mono:wght@400;500&family=Google+Sans+Flex:opsz,slnt,wght@6..144,-10..0,300..700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Geist+Mono:wght@400;500;600&family=Google+Sans+Flex:wght@400&family=Google+Sans:ital,wght@1,400&display=swap" />
   <link rel="stylesheet" href="css/styles.css" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%3Cg fill='%231868e3'%3E%3Ccircle r='19' cy='-24'/%3E%3Ccircle r='19' cy='-24' transform='rotate(72)'/%3E%3Ccircle r='19' cy='-24' transform='rotate(144)'/%3E%3Ccircle r='19' cy='-24' transform='rotate(216)'/%3E%3Ccircle r='19' cy='-24' transform='rotate(288)'/%3E%3Ccircle r='24'/%3E%3C/g%3E%3Ccircle r='9' fill='%23fcc64b'/%3E%3C/svg%3E" />
+  <link rel="icon" href="assets/flower.png" />
 </head>
 <body>
   <div class="frame">
 
     <header class="nav">
       <nav class="nav__group" aria-label="Primary">
-        <a class="chip chip--nav" href="#home" aria-current="page">home</a>
-        <a class="chip chip--nav" href="#work">work</a>
-        <a class="chip chip--nav" href="#about">about</a>
+        <a class="chip chip--nav" href="#home" aria-current="page">home<svg class="chip__arrow" viewBox="0 0 9 9" aria-hidden="true"><path d="M9 .5V7a.5.5 0 0 1-1 0V1.707L.854 8.854a.5.5 0 0 1-.707-.708L7.293 1H2a.5.5 0 0 1 0-1h6.5a.5.5 0 0 1 .5.5Z" /></svg></a>
+        <a class="chip chip--nav" href="#work">work<svg class="chip__arrow" viewBox="0 0 9 9" aria-hidden="true"><path d="M9 .5V7a.5.5 0 0 1-1 0V1.707L.854 8.854a.5.5 0 0 1-.707-.708L7.293 1H2a.5.5 0 0 1 0-1h6.5a.5.5 0 0 1 .5.5Z" /></svg></a>
+        <a class="chip chip--nav" href="#about">about<svg class="chip__arrow" viewBox="0 0 9 9" aria-hidden="true"><path d="M9 .5V7a.5.5 0 0 1-1 0V1.707L.854 8.854a.5.5 0 0 1-.707-.708L7.293 1H2a.5.5 0 0 1 0-1h6.5a.5.5 0 0 1 .5.5Z" /></svg></a>
       </nav>
       <div class="nav__group">
-        <a class="chip chip--nav" href="mailto:hello@example.com">contact</a>
-        <a class="logo" href="#home" aria-label="Manasi — home">
-          <svg viewBox="-42.5 -42.5 85 85" aria-hidden="true">
-            <g class="logo__petals">
-              <circle r="17.5" cy="-25.5" />
-              <circle r="17.5" cy="-25.5" transform="rotate(72)" />
-              <circle r="17.5" cy="-25.5" transform="rotate(144)" />
-              <circle r="17.5" cy="-25.5" transform="rotate(216)" />
-              <circle r="17.5" cy="-25.5" transform="rotate(288)" />
-              <circle r="21" />
-            </g>
-            <circle class="logo__center" r="8" />
-          </svg>
-        </a>
+        <a class="chip chip--nav" href="#contact">contact<svg class="chip__arrow" viewBox="0 0 9 9" aria-hidden="true"><path d="M9 .5V7a.5.5 0 0 1-1 0V1.707L.854 8.854a.5.5 0 0 1-.707-.708L7.293 1H2a.5.5 0 0 1 0-1h6.5a.5.5 0 0 1 .5.5Z" /></svg></a>
+        <span class="logo" data-cursor-tag="coming soon!" title="coming soon!">
+          <img src="assets/flower.png" alt="" width="29" height="29" draggable="false" />
+        </span>
       </div>
     </header>
 
     <main>
       <section class="hero" id="home">
-        <div class="hero__row" data-sticky-stage>
 
-          <div class="hero__intro">
-            <p class="hero__hi">Hi, I’m Manasi</p>
+        <div class="hero__intro">
+          <p class="hero__hi">Hi, I’m Manasi</p>
 
-            <div class="hats">
-              <ul class="hats__pills" aria-label="Other hats I wear — click one to swap it in">
-                <li><button class="chip chip--hat" type="button" data-slot="0"></button></li>
-                <li><button class="chip chip--hat" type="button" data-slot="1"></button></li>
-                <li><button class="chip chip--hat" type="button" data-slot="2"></button></li>
-              </ul>
+          <div class="hats">
+            <ul class="hats__pills" aria-label="Other hats I wear. Pick one to swap it in.">
+              <li><button class="chip chip--hat" type="button" data-slot="0"></button></li>
+              <li><button class="chip chip--hat" type="button" data-slot="1"></button></li>
+              <li><button class="chip chip--hat" type="button" data-slot="2"></button></li>
+            </ul>
 
-              <div class="annotation" aria-hidden="true">
-                <p class="annotation__text">four hats, click <br />any to swap :)</p>
-                <svg class="annotation__arrow" viewBox="0 0 34 42" fill="none">
-                  <path d="M27.5 3c1.6 11.5-4.6 25.4-21.2 33.6" />
-                  <path d="M5.2 26.6l.6 10.4 10.2-1.4" />
-                </svg>
-              </div>
+            <div class="annotation" aria-hidden="true">
+              <p>four hats, click </p>
+              <p>any to swap :)</p>
+              <img class="annotation__arrow" src="assets/arrow.png" alt="" width="22" height="27" draggable="false" />
             </div>
-
-            <h1 class="title-box">
-              <span class="visually-hidden">Manasi, </span>
-              <span class="title-box__text" data-hat-title aria-live="polite"></span>
-              <span class="title-box__handle title-box__handle--tl" aria-hidden="true"></span>
-              <span class="title-box__handle title-box__handle--tr" aria-hidden="true"></span>
-              <span class="title-box__handle title-box__handle--bl" aria-hidden="true"></span>
-              <span class="title-box__handle title-box__handle--br" aria-hidden="true"></span>
-            </h1>
-
-            <p class="hero__desc" data-hat-desc aria-live="polite"></p>
           </div>
 
-          <div class="sticky sticky--photo" tabindex="0" role="img" aria-label="A lego version of me holding a tablet, next to a little potted flower. Draggable sticky note.">
-            <img src="assets/lego-me.png" alt="" draggable="false" />
-          </div>
+          <h1 class="title-box">
+            <span class="visually-hidden">Manasi, </span>
+            <span class="title-box__text" data-hat-title></span>
+            <span class="title-box__handle title-box__handle--tl" aria-hidden="true"></span>
+            <span class="title-box__handle title-box__handle--tr" aria-hidden="true"></span>
+            <span class="title-box__handle title-box__handle--bl" aria-hidden="true"></span>
+            <span class="title-box__handle title-box__handle--br" aria-hidden="true"></span>
+          </h1>
 
-          <div class="sticky sticky--pink" tabindex="0" aria-label="Sticky note: previously at Bosch. Draggable.">
-            <p class="sticky__text">Prev @<br />Bosch</p>
-          </div>
+          <p class="hero__desc" data-hat-desc aria-live="polite"></p>
+        </div>
 
+        <div class="sticky sticky--pink" tabindex="0" aria-label="Sticky note: previously at Bosch. Drag to move.">
+          <p class="sticky__text">prev @ Bosch</p>
+        </div>
+
+        <div class="sticky sticky--photo" tabindex="0" role="img" aria-label="A lego version of me holding a tablet, next to a little potted flower. Drag to move.">
+          <img src="assets/lego-me.png" alt="" draggable="false" />
         </div>
 
         <p class="hero__note">*carrying a mental backpack of tools at all times ;)</p>
       </section>
     </main>
 
+  </div>
+
+  <div class="cursor" aria-hidden="true">
+    <img class="cursor__pointer" src="assets/cursor.png" alt="" />
+    <img class="cursor__move" src="assets/cursor-move.png" alt="" />
+    <span class="cursor__tag"></span>
   </div>
 
   <script src="js/main.js"></script>
