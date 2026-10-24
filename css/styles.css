@@ -21,7 +21,7 @@
   --sticky-yellow: #faf0d1;
   --sticky-pink: #fde6e6;
   --sticky-blue: #e1eafd;
-  --sticky-lavender: #e7e3ff;   /* the lavender stickies on the about + project pages */
+  --card-blue: #3a7cf0;   /* the accent blue, a shade lighter */
   --sticky-shadow: 0 22px 15px -15.4px rgba(193, 192, 204, .28);
   --sticky-shadow-drag: 0 24.5px 13.7px -13.6px rgba(40, 30, 150, .35);
 
@@ -316,7 +316,7 @@ img { display: block; max-width: 100%; }
   height: calc(186 * var(--u));
   display: block;
   padding: calc(42 * var(--u)) calc(26 * var(--u)) 0;
-  background: var(--sticky-blue);
+  background: var(--card-blue);
 }
 
 /* punched holes along the top, white like the selection handles */
@@ -339,12 +339,12 @@ img { display: block; max-width: 100%; }
   font-size: calc(21 * var(--u));
   line-height: var(--rule);
   letter-spacing: .02em;
-  color: var(--blue);
+  color: #fff;
   /* ruled lines sit just under each line of writing */
   background: linear-gradient(
       to bottom,
       transparent calc(var(--rule) - 6.5 * var(--u)),
-      rgba(19, 95, 236, .2) calc(var(--rule) - 6.5 * var(--u)) calc(var(--rule) - 5 * var(--u)),
+      rgba(255, 255, 255, .3) calc(var(--rule) - 6.5 * var(--u)) calc(var(--rule) - 5 * var(--u)),
       transparent calc(var(--rule) - 5 * var(--u))
     ) 0 0 / 100% var(--rule) repeat-y;
 }
@@ -354,10 +354,10 @@ img { display: block; max-width: 100%; }
   --rest: 8deg;
   --hover: 16deg;
   --drag: 22deg;
-  left: calc(368 * var(--u));
-  top: calc(38 * var(--u));
-  width: calc(116 * var(--u));
-  height: calc(116 * var(--u));
+  left: calc(356 * var(--u));
+  top: calc(28 * var(--u));
+  width: calc(135 * var(--u));
+  height: calc(135 * var(--u));
   background: var(--sticky-pink);
 }
 
@@ -377,15 +377,15 @@ img { display: block; max-width: 100%; }
   --rest: 8deg;
   --hover: 8deg;
   --drag: 0deg;
-  left: calc(6 * var(--u));
-  top: calc(230 * var(--u));
-  width: calc(110 * var(--u));
-  height: calc(110 * var(--u));
-  background: var(--sticky-lavender);
+  left: calc(40 * var(--u));
+  top: calc(220 * var(--u));
+  width: calc(135 * var(--u));
+  height: calc(135 * var(--u));
+  background: var(--sticky-yellow);
 }
 /* on the live site the photo note straightens out once it has been moved */
 .sticky--photo.was-dragged { --rest: 0deg; --hover: 0deg; }
-.sticky--photo img { width: calc(54 * var(--u)); height: auto; pointer-events: none; }
+.sticky--photo img { width: calc(66 * var(--u)); height: auto; pointer-events: none; }
 
 /* ---- play area note, with a folded corner --------------------------------- */
 .sticky--fold {
@@ -399,7 +399,7 @@ img { display: block; max-width: 100%; }
   height: calc(128 * var(--u));
   padding: 0 calc(20 * var(--u)) calc(4 * var(--u)) calc(22 * var(--u));
   justify-items: start;
-  background: var(--sticky-yellow);
+  background: var(--sticky-blue);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fold)), calc(100% - var(--fold)) 100%, 0 100%);
   /* a clipped box drops its box-shadow, so the shadow follows the paper's shape */
   box-shadow: none;
@@ -414,19 +414,18 @@ img { display: block; max-width: 100%; }
   bottom: 0;
   width: var(--fold);
   height: var(--fold);
-  background: #efdfae;   /* the underside of the fold, a shade deeper */
+  background: var(--blue);
   clip-path: polygon(0 0, 100% 0, 0 100%);
 }
 
 .sticky--fold .sticky__text {
   font-family: var(--font-mono);
   font-size: calc(14 * var(--u));
-  font-weight: 300;
   line-height: 1.5;
   letter-spacing: 0;
-  color: #666;
+  color: var(--blue);
 }
-.sticky--fold em { font-style: normal; background: var(--sticky-lavender); padding: 0 .2em; white-space: nowrap; }
+.sticky--fold em { font-style: normal; background: #fff3c2; padding: 0 .2em; white-space: nowrap; }
 
 /* ==========================================================================
    Custom cursor — the Figma-style pointer from the live site
