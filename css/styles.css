@@ -20,6 +20,7 @@
   --select: #fec901;
   --sticky-yellow: #faf0d1;
   --sticky-pink: #fde6e6;
+  --sticky-blue: #e1eafd;
   --sticky-shadow: 0 22px 15px -15.4px rgba(193, 192, 204, .28);
   --sticky-shadow-drag: 0 24.5px 13.7px -13.6px rgba(40, 30, 150, .35);
 
@@ -259,11 +260,25 @@ img { display: block; max-width: 100%; }
 }
 
 /* ==========================================================================
-   Sticky notes (draggable)
+   Sticky notes — a small pinboard of four draggable notes.
+   Everything inside is sized in --u (one "unit" = 1px at full size), so the
+   whole board scales down as one piece on narrower screens.
    ========================================================================== */
+.stickies {
+  --s: 1;
+  --u: calc(var(--s) * 1px);
+  position: absolute;
+  right: var(--pad);
+  top: calc(297px - 185 * var(--u));   /* centred on the intro copy */
+  width: calc(500 * var(--u));
+  height: calc(370 * var(--u));
+}
+
 .sticky {
-  --rot: 0deg;
+  --rot: var(--rest);
   --scale: 1;
+  --lift: 1.05;
+  --lift-drag: 1.1;
   position: absolute;
   z-index: 3;
   display: grid;
@@ -274,56 +289,139 @@ img { display: block; max-width: 100%; }
   user-select: none;
   -webkit-user-select: none;
   cursor: move;
-  transition: transform var(--spring-time) var(--spring), box-shadow var(--spring-time) var(--spring);
+  transition: transform var(--spring-time) var(--spring), box-shadow var(--spring-time) var(--spring), filter var(--spring-time) var(--spring);
 }
 
-.sticky--pink {
-  --rest: 8deg;
-  --hover: 16deg;
-  --drag: 22deg;
-  --rot: var(--rest);
-  width: 135px;
-  height: 135px;
-  right: 257px;
-  top: 268px;
-  background: var(--sticky-pink);
+.sticky:hover,
+.sticky:focus-visible { --rot: var(--hover); --scale: var(--lift); }
+
+.sticky.is-dragging {
+  --rot: var(--drag);
+  --scale: var(--lift-drag);
+  box-shadow: var(--sticky-shadow-drag);
 }
 
-.sticky--photo {
-  --rest: -6deg;
+/* ---- the big notebook card ------------------------------------------------ */
+.sticky--card {
+  --rest: -9deg;
   --hover: -6deg;
+  --drag: -3deg;
+  --lift: 1.03;
+  --lift-drag: 1.06;
+  --rule: calc(31 * var(--u));
+  left: calc(46 * var(--u));
+  top: calc(22 * var(--u));
+  width: calc(284 * var(--u));
+  height: calc(204 * var(--u));
+  display: block;
+  padding: calc(42 * var(--u)) calc(26 * var(--u)) 0;
+  background: var(--blue);
+}
+
+/* punched holes along the top, white like the selection handles */
+.sticky--card::before {
+  content: "";
+  position: absolute;
+  top: calc(14 * var(--u));
+  left: calc(24 * var(--u));
+  right: calc(24 * var(--u));
+  height: calc(9 * var(--u));
+  background:
+    linear-gradient(var(--bg), var(--bg)) left / calc(9 * var(--u)) 100% no-repeat,
+    linear-gradient(var(--bg), var(--bg)) 33.333% / calc(9 * var(--u)) 100% no-repeat,
+    linear-gradient(var(--bg), var(--bg)) 66.666% / calc(9 * var(--u)) 100% no-repeat,
+    linear-gradient(var(--bg), var(--bg)) right / calc(9 * var(--u)) 100% no-repeat;
+}
+
+.sticky--card .sticky__text {
+  font-family: var(--font-hand);
+  font-size: calc(21 * var(--u));
+  line-height: var(--rule);
+  letter-spacing: .02em;
+  color: #fff;
+  /* ruled lines sit just under each line of writing */
+  background: linear-gradient(
+      to bottom,
+      transparent calc(var(--rule) - 6.5 * var(--u)),
+      rgba(255, 255, 255, .26) calc(var(--rule) - 6.5 * var(--u)) calc(var(--rule) - 5 * var(--u)),
+      transparent calc(var(--rule) - 5 * var(--u))
+    ) 0 0 / 100% var(--rule) repeat-y;
+}
+
+/* ---- prev @ Bosch ----------------------------------------------------------- */
+.sticky--pink {
+  --rest: 5deg;
+  --hover: 11deg;
+  --drag: 15deg;
+  left: calc(374 * var(--u));
+  top: calc(48 * var(--u));
+  width: calc(112 * var(--u));
+  height: calc(102 * var(--u));
+  background: var(--sticky-pink);
+  align-content: center;
+  gap: calc(1 * var(--u));
+  font-family: var(--font-hand);
+  font-weight: 700;
+  color: var(--ink-sticky);
+  text-align: center;
+}
+.sticky--pink small { font-size: calc(16 * var(--u)); line-height: 1; }
+.sticky--pink strong { font-size: calc(30 * var(--u)); line-height: 1; letter-spacing: .02em; }
+
+/* ---- the lego me --------------------------------------------------------- */
+.sticky--photo {
+  --rest: 8deg;
+  --hover: 8deg;
   --drag: 0deg;
-  --rot: var(--rest);
-  width: 127px;
-  height: 127px;
-  right: 145px;
-  top: 183px;
+  left: calc(4 * var(--u));
+  top: calc(226 * var(--u));
+  width: calc(118 * var(--u));
+  height: calc(118 * var(--u));
   background: var(--sticky-yellow);
 }
 /* on the live site the photo note straightens out once it has been moved */
 .sticky--photo.was-dragged { --rest: 0deg; --hover: 0deg; }
+.sticky--photo img { width: calc(60 * var(--u)); height: auto; pointer-events: none; }
 
-.sticky:hover,
-.sticky:focus-visible { --rot: var(--hover); --scale: 1.05; }
+/* ---- play area note, with a folded corner --------------------------------- */
+.sticky--fold {
+  --rest: 3.5deg;
+  --hover: 6.5deg;
+  --drag: 9deg;
+  --fold: calc(30 * var(--u));
+  left: calc(222 * var(--u));
+  top: calc(212 * var(--u));
+  width: calc(266 * var(--u));
+  height: calc(118 * var(--u));
+  padding: 0 calc(24 * var(--u)) calc(4 * var(--u));
+  justify-items: start;
+  background: var(--sticky-blue);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fold)), calc(100% - var(--fold)) 100%, 0 100%);
+  /* a clipped box drops its box-shadow, so the shadow follows the paper's shape */
+  box-shadow: none;
+  filter: drop-shadow(0 7px 6px rgba(193, 192, 204, .45));
+}
+.sticky--fold.is-dragging { box-shadow: none; filter: drop-shadow(0 12px 9px rgba(40, 30, 150, .3)); }
 
-.sticky.is-dragging {
-  --rot: var(--drag);
-  --scale: 1.1;
-  box-shadow: var(--sticky-shadow-drag);
+.sticky--fold::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: var(--fold);
+  height: var(--fold);
+  background: var(--blue);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
 }
 
-.sticky--photo img { width: 62px; height: auto; pointer-events: none; }
-
-.sticky__text {
-  font-family: var(--font-hand);
-  font-weight: 700;
-  width: 79px;
-  font-size: 17px;
-  line-height: 20.4px;
-  color: var(--ink-sticky);
-  text-align: center;
-  white-space: pre-wrap;
+.sticky--fold .sticky__text {
+  font-family: var(--font-mono);
+  font-size: calc(12.5 * var(--u));
+  line-height: 1.5;
+  letter-spacing: .01em;
+  color: var(--blue);
 }
+.sticky--fold em { font-style: normal; background: #fff3c2; padding: 0 .2em; white-space: nowrap; }
 
 /* ==========================================================================
    Custom cursor — the Figma-style pointer from the live site
@@ -385,23 +483,28 @@ img { display: block; max-width: 100%; }
 /* ==========================================================================
    Responsive
    ========================================================================== */
+@media (max-width: 1399px) {
+  .stickies { --s: .82; }
+}
+
+@media (max-width: 1299px) {
+  .stickies { --s: .72; }
+}
+
+/* below desktop the board drops under the copy and stays fully draggable */
 @media (max-width: 1199px) {
   :root { --gutter: 39px; --pad: 40px; --nav-h: 59px; }
   .chip--nav { font-size: 11px; line-height: 13.2px; padding: 5px 12px; }
-  .hero { padding-top: 141px; height: 562px; }
-  .sticky--pink  { width: 105px; height: 105px; right: 268px; top: 252px; }
-  .sticky--photo { width: 100px; height: 100px; right: 150px; top: 168px; }
-  .sticky--photo img { width: 49px; }
-  .sticky__text { width: 64px; font-size: 14px; line-height: 17px; }
+  .hero { height: auto; padding-top: 96px; padding-bottom: 80px; }
+  .stickies { --s: .9; position: relative; right: auto; top: auto; margin: 56px 0 0 auto; }
 }
 
 @media (max-width: 899px) {
-  .hero { height: auto; padding-top: 72px; padding-bottom: 340px; }
+  .hero { padding-top: 72px; }
   .annotation { position: static; width: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; margin-top: 12px; text-align: left; }
   .annotation p { white-space: normal; }
   .annotation__arrow { order: -1; margin: 0 4px 0 0; transform: rotate(150deg); width: 18px; height: 22px; }
-  .sticky--pink  { right: auto; left: calc(var(--pad) + 10px); top: auto; bottom: 90px; }
-  .sticky--photo { right: auto; left: calc(var(--pad) + 140px); top: auto; bottom: 150px; }
+  .stickies { margin: 48px auto 0; }
 }
 
 @media (max-width: 640px) {
@@ -412,7 +515,7 @@ img { display: block; max-width: 100%; }
   .chip--nav:hover .chip__arrow { width: 0; margin: 0; }
   .logo { width: 24px; height: 24px; }
 
-  .hero { padding-top: 56px; padding-bottom: 300px; }
+  .hero { padding-top: 56px; padding-bottom: 64px; }
   .hero__hi { font-size: 16px; line-height: 19.2px; }
   .hats__pills { flex-wrap: wrap; gap: 8px; }
   .chip--hat { font-size: 12px; padding: 6px 10px; }
@@ -420,8 +523,8 @@ img { display: block; max-width: 100%; }
   .hero__desc { font-size: 14px; line-height: 20.4px; margin-top: 18px; }
   .hero__note { font-size: 12px; line-height: 15px; bottom: 18px; right: var(--pad); }
 
-  .sticky--pink  { left: calc(var(--pad) + 4px); bottom: 80px; }
-  .sticky--photo { left: auto; right: calc(var(--pad) + 4px); bottom: 130px; }
+  .stickies { --s: .64; margin-top: 40px; }
+  .sticky--fold .sticky__text { font-size: 9.5px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

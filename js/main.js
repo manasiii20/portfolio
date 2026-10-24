@@ -81,7 +81,6 @@ render();
 /* ==========================================================================
    Sticky notes — pick up, drag anywhere, drop.
    ========================================================================== */
-const hero = document.querySelector(".hero");
 const stickies = [...document.querySelectorAll(".sticky")];
 let topZ = 10;
 
@@ -89,13 +88,13 @@ const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
 
 // keep notes on the page: anywhere vertically, never past the side edges
 function bounds(el) {
-  const h = hero.getBoundingClientRect();
+  const board = el.offsetParent.getBoundingClientRect();
   const page = document.documentElement;
   return {
-    minX: -h.left,
-    maxX: page.clientWidth - h.left - el.offsetWidth,
-    minY: -(h.top + window.scrollY),
-    maxY: page.scrollHeight - (h.top + window.scrollY) - el.offsetHeight,
+    minX: -board.left,
+    maxX: page.clientWidth - board.left - el.offsetWidth,
+    minY: -(board.top + window.scrollY),
+    maxY: page.scrollHeight - (board.top + window.scrollY) - el.offsetHeight,
   };
 }
 
@@ -153,7 +152,7 @@ window.addEventListener("resize", () => {
 });
 
 // crossing a layout breakpoint puts the notes back where the layout wants them
-["(max-width: 1199px)", "(max-width: 899px)", "(max-width: 640px)"].forEach((q) => {
+["(max-width: 1399px)", "(max-width: 1299px)", "(max-width: 1199px)", "(max-width: 899px)", "(max-width: 640px)"].forEach((q) => {
   window.matchMedia(q).addEventListener("change", () => {
     stickies.forEach((el) => ["left", "top", "right", "bottom"].forEach((p) => el.style.removeProperty(p)));
   });
