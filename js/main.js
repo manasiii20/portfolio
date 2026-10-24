@@ -140,6 +140,7 @@ stickies.forEach((el) => {
     if (!move) return;
     e.preventDefault();
     el.style.zIndex = ++topZ;
+    el.classList.add("was-dragged");
     place(el, el.offsetLeft + move[0], el.offsetTop + move[1]);
   });
 });

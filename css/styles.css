@@ -302,15 +302,18 @@ img { display: block; max-width: 100%; }
   box-shadow: var(--sticky-shadow-drag);
 }
 
+/* once a note has been picked up and dropped, it settles down straight */
+.sticky.was-dragged { --rest: 0deg; --hover: 0deg; }
+
 /* ---- the big notebook card ------------------------------------------------ */
 .sticky--card {
-  --rest: -9deg;
-  --hover: -6deg;
-  --drag: -3deg;
+  --rest: -5.5deg;
+  --hover: -3deg;
+  --drag: -1deg;
   --lift: 1.03;
   --lift-drag: 1.06;
   --rule: calc(31 * var(--u));
-  left: calc(46 * var(--u));
+  left: calc(75 * var(--u));
   top: calc(22 * var(--u));
   width: calc(284 * var(--u));
   height: calc(186 * var(--u));
@@ -349,52 +352,60 @@ img { display: block; max-width: 100%; }
     ) 0 0 / 100% var(--rule) repeat-y;
 }
 
-/* ---- prev @ Bosch — the original note from the live site -------------------- */
-.sticky--pink {
-  --rest: 8deg;
-  --hover: 16deg;
-  --drag: 22deg;
-  left: calc(356 * var(--u));
-  top: calc(28 * var(--u));
-  width: calc(135 * var(--u));
-  height: calc(135 * var(--u));
-  background: var(--sticky-pink);
-}
-
-.sticky--pink .sticky__text {
-  width: calc(79 * var(--u));
-  font-family: var(--font-hand);
-  font-weight: 700;
-  font-size: calc(17 * var(--u));
-  line-height: calc(20.4 * var(--u));
-  color: var(--ink-sticky);
-  text-align: center;
-  white-space: pre-wrap;
-}
-
-/* ---- the lego me --------------------------------------------------------- */
+/* ---- the lego me: small, square and upright ------------------------------ */
 .sticky--photo {
-  --rest: 8deg;
-  --hover: 8deg;
-  --drag: 0deg;
-  left: calc(40 * var(--u));
-  top: calc(220 * var(--u));
-  width: calc(135 * var(--u));
-  height: calc(135 * var(--u));
+  --rest: 0deg;
+  --hover: 4deg;
+  --drag: 7deg;
+  left: calc(381 * var(--u));
+  top: calc(97 * var(--u));
+  width: calc(120 * var(--u));
+  height: calc(120 * var(--u));
   background: var(--sticky-yellow);
 }
-/* on the live site the photo note straightens out once it has been moved */
-.sticky--photo.was-dragged { --rest: 0deg; --hover: 0deg; }
-.sticky--photo img { width: calc(66 * var(--u)); height: auto; pointer-events: none; }
+.sticky--photo img { width: calc(58 * var(--u)); height: auto; pointer-events: none; }
 
-/* the project name gets a highlighter swipe */
-.sticky--card em {
-  font-style: normal;
-  white-space: nowrap;
-  padding: 0 .15em;
-  background: #fff3c2;
-  color: var(--card-blue);
+/* ---- light blue note, with a folded corner --------------------------------- */
+.sticky--fold {
+  --rest: 3deg;
+  --hover: 6deg;
+  --drag: 9deg;
+  --fold: calc(30 * var(--u));
+  left: calc(192 * var(--u));
+  top: calc(230 * var(--u));
+  width: calc(281 * var(--u));
+  height: calc(122 * var(--u));
+  padding: 0 calc(14 * var(--u)) calc(4 * var(--u)) calc(22 * var(--u));
+  justify-items: start;
+  background: var(--sticky-blue);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fold)), calc(100% - var(--fold)) 100%, 0 100%);
+  /* a clipped box drops its box-shadow, so the shadow follows the paper's shape */
+  box-shadow: none;
+  filter: drop-shadow(0 7px 6px rgba(193, 192, 204, .45));
 }
+.sticky--fold.is-dragging { box-shadow: none; filter: drop-shadow(0 12px 9px rgba(40, 30, 150, .3)); }
+
+.sticky--fold::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: var(--fold);
+  height: var(--fold);
+  background: var(--blue);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.sticky--fold .sticky__text {
+  font-family: var(--font-mono);
+  font-size: calc(14 * var(--u));
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--blue);
+}
+.sticky--fold em { font-style: normal; background: #fff3c2; padding: 0 .15em; }
+.nowrap { white-space: nowrap; }
 
 /* ==========================================================================
    Custom cursor — the Figma-style pointer from the live site
@@ -497,6 +508,7 @@ img { display: block; max-width: 100%; }
   .hero__note { font-size: 12px; line-height: 15px; bottom: 18px; right: var(--pad); }
 
   .stickies { --s: .64; margin-top: 40px; }
+  .sticky--fold .sticky__text { font-size: 10.5px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
