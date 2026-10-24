@@ -368,7 +368,7 @@ img { display: block; max-width: 100%; }
 }
 
 @media (max-width: 640px) {
-  :root { --gutter: 12px; --pad: 16px; }
+  :root { --gutter: 16px; --pad: 16px; }
   .nav { gap: 12px; }
   .nav__group { gap: 8px; }
   .nav__group:last-child { gap: 12px; }
