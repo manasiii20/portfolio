@@ -32,6 +32,7 @@
   /* springy settle, a hair of overshoot like Framer's default spring */
   --spring: cubic-bezier(.25, 1.2, .5, 1);
   --spring-time: .32s;
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
 }
 
 /* ==========================================================================
@@ -71,6 +72,7 @@ img { display: block; max-width: 100%; }
    Frame — the hairlines running down both sides of the page
    ========================================================================== */
 .frame {
+  padding-top: var(--nav-h);
   margin-inline: var(--gutter);
   min-height: 100vh;
   border-inline: 1px solid var(--line);
@@ -95,6 +97,13 @@ img { display: block; max-width: 100%; }
   transition: color .2s ease;
 }
 
+/* scrolling down fades the nav out (it drifts down a touch); scrolling up brings it back */
+.nav.is-hidden {
+  opacity: 0;
+  transform: translateY(30px);
+  pointer-events: none;
+}
+
 /* on hover the chip turns blue and grows a little ↗ */
 .chip__arrow {
   width: 0;
@@ -114,6 +123,13 @@ img { display: block; max-width: 100%; }
    Nav
    ========================================================================== */
 .nav {
+  position: fixed;
+  top: 0;
+  left: calc(var(--gutter) + 1px);
+  right: calc(var(--gutter) + 1px);
+  z-index: 50;
+  background: var(--bg);
+  transition: opacity .3s var(--ease-out, ease), transform .3s var(--ease-out, ease);
   height: var(--nav-h);
   display: flex;
   align-items: center;
@@ -430,6 +446,168 @@ img { display: block; max-width: 100%; }
 .nowrap { white-space: nowrap; }
 
 /* ==========================================================================
+   Selected work
+   ========================================================================== */
+.work {
+  position: relative;
+  padding: 77px var(--pad) 76px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chip--label {
+  padding: 6.4px 13.4px;
+  font-size: 13.5px;
+  line-height: 16.2px;
+  color: var(--ink-nav);
+}
+
+.work__heading {
+  margin: 20px 0 0;
+  font-size: 22px;
+  line-height: 27px;
+  font-weight: 500;
+  letter-spacing: .03em;
+  color: var(--blue);
+}
+
+/* handwritten note pointing at the comma card */
+.work__note {
+  position: absolute;
+  right: calc(var(--pad) + 112px);
+  top: 154px;
+  width: 167px;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.work__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 50px 45px;
+  margin-top: 45px;
+}
+
+/* ---- project card --------------------------------------------------------- */
+.project {
+  --accent: var(--blue);
+  position: relative;
+  display: block;
+  padding: 4px;
+}
+
+.project__frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-radius: 2px;
+}
+
+/* the hairline frame, drawn on top so it also edges the image */
+.project__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(217, 217, 217, .85);
+  border-radius: 2px;
+  pointer-events: none;
+  transition: border-color .25s ease;
+}
+
+.project__image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.project__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 23px 30px 30px;
+}
+
+.project__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 14.4px;
+  color: #a5a5a5;
+}
+
+.project__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.project__title {
+  margin: 0;
+  font-size: 17px;
+  line-height: 23.9px;
+  font-weight: 400;
+  letter-spacing: .03em;
+  color: #616269;
+}
+
+.project__sub {
+  display: flex;
+  align-items: flex-start;
+  gap: 7.15px;
+  padding: 0 3.58px;
+  font-size: 12px;
+  line-height: 23.9px;
+  letter-spacing: .04em;
+  color: #767881;
+}
+
+.project__arrow {
+  flex: none;
+  width: 13px;
+  height: 17px;
+}
+
+.project__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: -3px;   /* the copy block and tags sit 11px apart */
+}
+
+.project__tags li {
+  padding: 4.45px 10.68px;
+  background: var(--chip);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 12px;
+  color: var(--ink-mono);
+}
+
+/* hover: the frame takes the project's colour and gets selection handles */
+.project__handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border: 1px solid var(--accent);
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.project__handle--tl { top: 0;    left: 0; }
+.project__handle--tr { top: 0;    right: 0; }
+.project__handle--bl { bottom: 0; left: 0; }
+.project__handle--br { bottom: 0; right: 0; }
+
+.project:hover .project__frame::after,
+.project:focus-visible .project__frame::after { border-color: var(--accent); }
+.project:hover .project__handle,
+.project:focus-visible .project__handle { opacity: 1; }
+.project:focus-visible { outline: none; }
+
+/* ==========================================================================
    Custom cursor — the Figma-style pointer from the live site
    ========================================================================== */
 .cursor { display: none; }
@@ -506,6 +684,8 @@ img { display: block; max-width: 100%; }
 }
 
 @media (max-width: 899px) {
+  .work__grid { grid-template-columns: 1fr; gap: 32px; }
+  .work__note { display: none; }
   .hero { padding-top: 72px; }
   .annotation { position: static; width: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; margin-top: 12px; text-align: left; }
   .annotation p { white-space: normal; }
@@ -530,6 +710,11 @@ img { display: block; max-width: 100%; }
   .hero__note { font-size: 12px; line-height: 15px; bottom: 18px; right: var(--pad); }
 
   .stickies { --s: .64; margin-top: 40px; }
+  .work { padding-top: 56px; padding-bottom: 56px; }
+  .work__heading { font-size: 19px; line-height: 24px; }
+  .project__body { padding: 18px 18px 22px; }
+  .project__image { height: 120px; }
+  .project__sub { line-height: 18px; padding-top: 3px; }
   .sticky--fold .sticky__text { font-size: 10.5px; }
 }
 

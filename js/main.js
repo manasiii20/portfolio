@@ -185,3 +185,23 @@ if (finePointer.matches) {
 
   document.documentElement.addEventListener("mouseleave", () => cursor.classList.remove("is-visible"));
 }
+
+/* ==========================================================================
+   Nav — fades away while scrolling down, comes back when scrolling up
+   ========================================================================== */
+const nav = document.querySelector(".nav");
+let lastY = window.scrollY;
+
+window.addEventListener(
+  "scroll",
+  () => {
+    const y = window.scrollY;
+    if (Math.abs(y - lastY) < 4) return; // ignore tiny jitters
+    nav.classList.toggle("is-hidden", y > lastY && y > nav.offsetHeight);
+    lastY = y;
+  },
+  { passive: true }
+);
+
+// keyboard users tabbing into the nav should always see it
+nav.addEventListener("focusin", () => nav.classList.remove("is-hidden"));
