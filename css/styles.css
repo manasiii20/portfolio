@@ -496,62 +496,26 @@ img { display: block; max-width: 100%; }
 .project__media {
   position: relative;
   aspect-ratio: var(--ratio);
+  overflow: hidden;
   background: #f3f3f5;
 }
 
 /* each thumbnail's shape */
-.project[href$="hitachixbosch"] { --ratio: 964 / 804; }
+.project[href$="hitachixbosch"] { --ratio: 482 / 395; }
 .project[href$="comma"]         { --ratio: 958 / 632; }
-.project[href$="queue2"]        { --ratio: 959 / 927; }
-/* comma + Queue2 heights minus Hitachi's, so the two columns line up */
-.project[href$="awrd"]          { --ratio: 1 / calc(632 / 958 + 927 / 959 - 804 / 964); }
+.project[href$="awrd"]          { --ratio: 482 / 320; }
+.project[href$="queue2"]        { --ratio: 479 / 398; }
 
 .project__video,
 .project__block,
-.project__map {
+.project__image {
   display: block;
   width: 100%;
   height: 100%;
 }
-.project__video { object-fit: cover; }
+.project__video,
+.project__image { object-fit: cover; object-position: center; }
 .project__block { background: #d33c27; }
-
-/* Queue2: the map sits on a slowly drifting orange gradient, which shows
-   as a soft frame around it */
-.project__media:has(.project__drift) { overflow: hidden; background: #fde4d8; }
-.project__drift {
-  position: absolute;
-  inset: -40%;
-  background:
-    radial-gradient(closest-side at 30% 30%, rgba(242, 75, 24, .95), transparent),
-    radial-gradient(closest-side at 72% 68%, rgba(255, 150, 110, .9), transparent),
-    radial-gradient(closest-side at 70% 22%, rgba(255, 214, 196, .9), transparent),
-    radial-gradient(closest-side at 25% 78%, rgba(250, 120, 80, .8), transparent);
-  filter: blur(18px);
-  animation: drift 14s ease-in-out infinite alternate;
-}
-@keyframes drift {
-  0%   { transform: rotate(0deg) scale(1) translate(0, 0); }
-  50%  { transform: rotate(160deg) scale(1.12) translate(3%, -2%); }
-  100% { transform: rotate(320deg) scale(.95) translate(-2%, 3%); }
-}
-.project__map {
-  position: absolute;
-  top: 2.05%;
-  left: 2.29%;
-  width: calc(100% - 2.29% - 2.5%);
-  height: calc(100% - 2.05% - 2.27%);
-  object-fit: cover;
-}
-
-/* faint hairline edge on the thumbnail */
-.project__media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border: 1px solid rgba(217, 217, 217, .6);
-  pointer-events: none;
-}
 
 .project__body {
   display: flex;
@@ -616,10 +580,6 @@ img { display: block; max-width: 100%; }
   font-size: 10px;
   line-height: 12px;
   color: var(--ink-mono);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .project__drift { animation: none; }
 }
 
 /* ==========================================================================
