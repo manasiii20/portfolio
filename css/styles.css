@@ -544,14 +544,13 @@ img { display: block; max-width: 100%; }
   object-fit: cover;
 }
 
-/* hairline edge on the thumbnail; on hover it takes the project's colour */
+/* faint hairline edge on the thumbnail */
 .project__media::after {
   content: "";
   position: absolute;
   inset: 0;
   border: 1px solid rgba(217, 217, 217, .6);
   pointer-events: none;
-  transition: border-color .25s ease;
 }
 
 .project__body {
@@ -618,28 +617,6 @@ img { display: block; max-width: 100%; }
   line-height: 12px;
   color: var(--ink-mono);
 }
-
-/* hover: the thumbnail gets a coloured edge and selection handles */
-.project__handle {
-  position: absolute;
-  z-index: 2;
-  width: 8px;
-  height: 8px;
-  background: #fff;
-  border: 1px solid var(--accent);
-  opacity: 0;
-  transition: opacity .25s ease;
-}
-.project__handle--tl { top: -4px;    left: -4px; }
-.project__handle--tr { top: -4px;    right: -4px; }
-.project__handle--bl { bottom: -4px; left: -4px; }
-.project__handle--br { bottom: -4px; right: -4px; }
-
-.project:hover .project__media::after,
-.project:focus-visible .project__media::after { border-color: var(--accent); }
-.project:hover .project__handle,
-.project:focus-visible .project__handle { opacity: 1; }
-.project:focus-visible { outline: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .project__drift { animation: none; }
