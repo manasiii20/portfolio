@@ -470,62 +470,94 @@ img { display: block; max-width: 100%; }
   color: var(--blue);
 }
 
-/* handwritten note pointing at the comma card */
-.work__note {
-  position: absolute;
-  right: calc(var(--pad) + 112px);
-  top: 154px;
-  width: 167px;
-  height: auto;
-  pointer-events: none;
-  user-select: none;
-}
-
-.work__grid {
+/* two staggered columns. Each thumbnail keeps its own shape; the AWRD block
+   is sized so both columns end on the same line */
+.work__cols {
+  --col-gap: 40px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 50px 45px;
+  gap: var(--col-gap);
+  align-items: start;
   margin-top: 45px;
+}
+
+.work__col {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
 }
 
 /* ---- project card --------------------------------------------------------- */
 .project {
   --accent: var(--blue);
-  position: relative;
   display: block;
-  padding: 4px;
 }
 
-.project__frame {
+.project__media {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  border-radius: 2px;
+  aspect-ratio: var(--ratio);
+  background: #f3f3f5;
 }
 
-/* the hairline frame, drawn on top so it also edges the image */
-.project__frame::after {
+/* each thumbnail's shape */
+.project[href$="hitachixbosch"] { --ratio: 964 / 804; }
+.project[href$="comma"]         { --ratio: 958 / 632; }
+.project[href$="queue2"]        { --ratio: 959 / 927; }
+/* comma + Queue2 heights minus Hitachi's, so the two columns line up */
+.project[href$="awrd"]          { --ratio: 1 / calc(632 / 958 + 927 / 959 - 804 / 964); }
+
+.project__video,
+.project__block,
+.project__map {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.project__video { object-fit: cover; }
+.project__block { background: #d33c27; }
+
+/* Queue2: the map sits on a slowly drifting orange gradient, which shows
+   as a soft frame around it */
+.project__media:has(.project__drift) { overflow: hidden; background: #fde4d8; }
+.project__drift {
+  position: absolute;
+  inset: -40%;
+  background:
+    radial-gradient(closest-side at 30% 30%, rgba(242, 75, 24, .95), transparent),
+    radial-gradient(closest-side at 72% 68%, rgba(255, 150, 110, .9), transparent),
+    radial-gradient(closest-side at 70% 22%, rgba(255, 214, 196, .9), transparent),
+    radial-gradient(closest-side at 25% 78%, rgba(250, 120, 80, .8), transparent);
+  filter: blur(18px);
+  animation: drift 14s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  0%   { transform: rotate(0deg) scale(1) translate(0, 0); }
+  50%  { transform: rotate(160deg) scale(1.12) translate(3%, -2%); }
+  100% { transform: rotate(320deg) scale(.95) translate(-2%, 3%); }
+}
+.project__map {
+  position: absolute;
+  top: 2.05%;
+  left: 2.29%;
+  width: calc(100% - 2.29% - 2.5%);
+  height: calc(100% - 2.05% - 2.27%);
+  object-fit: cover;
+}
+
+/* hairline edge on the thumbnail; on hover it takes the project's colour */
+.project__media::after {
   content: "";
   position: absolute;
   inset: 0;
-  border: 1px solid rgba(217, 217, 217, .85);
-  border-radius: 2px;
+  border: 1px solid rgba(217, 217, 217, .6);
   pointer-events: none;
   transition: border-color .25s ease;
-}
-
-.project__image {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
 }
 
 .project__body {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 23px 30px 30px;
+  padding-top: 20px;
 }
 
 .project__meta {
@@ -542,6 +574,7 @@ img { display: block; max-width: 100%; }
   display: flex;
   flex-direction: column;
   gap: 2px;
+  margin-top: 12px;
 }
 
 .project__title {
@@ -574,7 +607,7 @@ img { display: block; max-width: 100%; }
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: -3px;   /* the copy block and tags sit 11px apart */
+  margin-top: 11px;
 }
 
 .project__tags li {
@@ -586,9 +619,10 @@ img { display: block; max-width: 100%; }
   color: var(--ink-mono);
 }
 
-/* hover: the frame takes the project's colour and gets selection handles */
+/* hover: the thumbnail gets a coloured edge and selection handles */
 .project__handle {
   position: absolute;
+  z-index: 2;
   width: 8px;
   height: 8px;
   background: #fff;
@@ -596,16 +630,20 @@ img { display: block; max-width: 100%; }
   opacity: 0;
   transition: opacity .25s ease;
 }
-.project__handle--tl { top: 0;    left: 0; }
-.project__handle--tr { top: 0;    right: 0; }
-.project__handle--bl { bottom: 0; left: 0; }
-.project__handle--br { bottom: 0; right: 0; }
+.project__handle--tl { top: -4px;    left: -4px; }
+.project__handle--tr { top: -4px;    right: -4px; }
+.project__handle--bl { bottom: -4px; left: -4px; }
+.project__handle--br { bottom: -4px; right: -4px; }
 
-.project:hover .project__frame::after,
-.project:focus-visible .project__frame::after { border-color: var(--accent); }
+.project:hover .project__media::after,
+.project:focus-visible .project__media::after { border-color: var(--accent); }
 .project:hover .project__handle,
 .project:focus-visible .project__handle { opacity: 1; }
 .project:focus-visible { outline: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .project__drift { animation: none; }
+}
 
 /* ==========================================================================
    Custom cursor — the Figma-style pointer from the live site
@@ -684,8 +722,9 @@ img { display: block; max-width: 100%; }
 }
 
 @media (max-width: 899px) {
-  .work__grid { grid-template-columns: 1fr; gap: 32px; }
-  .work__note { display: none; }
+  .work__cols { grid-template-columns: 1fr; gap: 40px; }
+  .work__col { display: contents; }
+  .project { order: var(--order); }
   .hero { padding-top: 72px; }
   .annotation { position: static; width: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; margin-top: 12px; text-align: left; }
   .annotation p { white-space: normal; }
@@ -712,8 +751,6 @@ img { display: block; max-width: 100%; }
   .stickies { --s: .64; margin-top: 40px; }
   .work { padding-top: 56px; padding-bottom: 56px; }
   .work__heading { font-size: 19px; line-height: 24px; }
-  .project__body { padding: 18px 18px 22px; }
-  .project__image { height: 120px; }
   .project__sub { line-height: 18px; padding-top: 3px; }
   .sticky--fold .sticky__text { font-size: 10.5px; }
 }
