@@ -282,7 +282,7 @@ img { display: block; max-width: 100%; }
    whole board scales down as one piece on narrower screens.
    ========================================================================== */
 .stickies {
-  --s: .9;
+  --s: 1;
   --u: calc(var(--s) * 1px);
   position: absolute;
   right: calc(var(--pad) + 80 * var(--u));
@@ -635,11 +635,11 @@ img { display: block; max-width: 100%; }
    Responsive
    ========================================================================== */
 @media (max-width: 1399px) {
-  .stickies { --s: .74; }
+  .stickies { --s: .82; }
 }
 
 @media (max-width: 1299px) {
-  .stickies { --s: .65; }
+  .stickies { --s: .72; }
 }
 
 /* below desktop the board drops under the copy and stays fully draggable */
@@ -647,7 +647,7 @@ img { display: block; max-width: 100%; }
   :root { --gutter: 39px; --pad: 40px; --nav-h: 59px; }
   .chip--nav { font-size: 11px; line-height: 13.2px; padding: 5px 12px; }
   .hero { height: auto; padding-top: 96px; padding-bottom: 80px; }
-  .stickies { --s: .81; position: relative; right: auto; top: auto; margin: 56px 0 0 auto; }
+  .stickies { --s: .9; position: relative; right: auto; top: auto; margin: 56px 0 0 auto; }
 }
 
 @media (max-width: 899px) {
@@ -677,7 +677,7 @@ img { display: block; max-width: 100%; }
   .hero__desc { font-size: 14px; line-height: 20.4px; margin-top: 18px; }
   .hero__note { font-size: 12px; line-height: 15px; bottom: 18px; right: var(--pad); }
 
-  .stickies { --s: .58; margin-top: 40px; }
+  .stickies { --s: .64; margin-top: 40px; }
   .work { padding-top: 56px; padding-bottom: 56px; }
   .work__heading { font-size: 19px; line-height: 24px; }
   .project__sub { font-size: 13px; line-height: 19px; }
