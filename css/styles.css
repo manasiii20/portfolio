@@ -500,11 +500,13 @@ img { display: block; max-width: 100%; }
   background: #f3f3f5;
 }
 
-/* each thumbnail's shape */
-.project[href$="hitachixbosch"] { --ratio: 482 / 394; }
-.project[href$="comma"]         { --ratio: 479 / 316; }
-.project[href$="awrd"]          { --ratio: 482 / 326; }
-.project[href$="queue2"]        { --ratio: 479 / 405; }
+/* each video's box takes the video's own shape, so nothing gets cropped.
+   Queue2 is a still image; its box absorbs the difference so both
+   columns end on the same line */
+.project[href$="hitachixbosch"] { --ratio: 964 / 804; }
+.project[href$="comma"]         { --ratio: 958 / 632; }
+.project[href$="awrd"]          { --ratio: 964 / 652; }
+.project[href$="queue2"]        { --ratio: 1 / calc(804 / 964 + 652 / 964 - 632 / 958); }
 
 .project__video,
 .project__image {
