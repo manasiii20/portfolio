@@ -282,7 +282,7 @@ img { display: block; max-width: 100%; }
    whole board scales down as one piece on narrower screens.
    ========================================================================== */
 .stickies {
-  --s: 1;
+  --s: .9;
   --u: calc(var(--s) * 1px);
   position: absolute;
   right: calc(var(--pad) + 80 * var(--u));
@@ -496,7 +496,6 @@ img { display: block; max-width: 100%; }
 .project__media {
   position: relative;
   aspect-ratio: var(--ratio);
-  overflow: hidden;
   background: #f3f3f5;
 }
 
@@ -505,7 +504,7 @@ img { display: block; max-width: 100%; }
    columns end on the same line */
 .project[href$="hitachixbosch"] { --ratio: 964 / 804; }
 .project[href$="comma"]         { --ratio: 958 / 632; }
-.project[href$="awrd"]          { --ratio: 964 / 652; }
+.project[href$="awrd"]          { --ratio: 482 / 326; }
 .project[href$="queue2"]        { --ratio: 1 / calc(804 / 964 + 652 / 964 - 632 / 958); }
 
 .project__video,
@@ -514,8 +513,14 @@ img { display: block; max-width: 100%; }
   width: 100%;
   height: 100%;
 }
-.project__video,
+.project__video { object-fit: contain; object-position: center; }
+/* the still image fills its box; only it gets trimmed at the sides */
 .project__image { object-fit: cover; object-position: center; }
+.project[href$="queue2"] .project__media { overflow: hidden; }
+
+/* the AWRD video has a hairline frame drawn right at its edge: sit it a
+   hair inside the box, on white, so no rounding can ever shave that edge */
+.project[href$="awrd"] .project__media { padding: 1px; background: #fff; }
 
 .project__body {
   display: flex;
@@ -630,11 +635,11 @@ img { display: block; max-width: 100%; }
    Responsive
    ========================================================================== */
 @media (max-width: 1399px) {
-  .stickies { --s: .82; }
+  .stickies { --s: .74; }
 }
 
 @media (max-width: 1299px) {
-  .stickies { --s: .72; }
+  .stickies { --s: .65; }
 }
 
 /* below desktop the board drops under the copy and stays fully draggable */
@@ -642,7 +647,7 @@ img { display: block; max-width: 100%; }
   :root { --gutter: 39px; --pad: 40px; --nav-h: 59px; }
   .chip--nav { font-size: 11px; line-height: 13.2px; padding: 5px 12px; }
   .hero { height: auto; padding-top: 96px; padding-bottom: 80px; }
-  .stickies { --s: .9; position: relative; right: auto; top: auto; margin: 56px 0 0 auto; }
+  .stickies { --s: .81; position: relative; right: auto; top: auto; margin: 56px 0 0 auto; }
 }
 
 @media (max-width: 899px) {
@@ -672,7 +677,7 @@ img { display: block; max-width: 100%; }
   .hero__desc { font-size: 14px; line-height: 20.4px; margin-top: 18px; }
   .hero__note { font-size: 12px; line-height: 15px; bottom: 18px; right: var(--pad); }
 
-  .stickies { --s: .64; margin-top: 40px; }
+  .stickies { --s: .58; margin-top: 40px; }
   .work { padding-top: 56px; padding-bottom: 56px; }
   .work__heading { font-size: 19px; line-height: 24px; }
   .project__sub { font-size: 13px; line-height: 19px; }
