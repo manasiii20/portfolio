@@ -501,13 +501,12 @@ img { display: block; max-width: 100%; }
 }
 
 /* each thumbnail's shape */
-.project[href$="hitachixbosch"] { --ratio: 482 / 395; }
-.project[href$="comma"]         { --ratio: 958 / 632; }
-.project[href$="awrd"]          { --ratio: 482 / 320; }
-.project[href$="queue2"]        { --ratio: 479 / 398; }
+.project[href$="hitachixbosch"] { --ratio: 482 / 394; }
+.project[href$="comma"]         { --ratio: 479 / 316; }
+.project[href$="awrd"]          { --ratio: 482 / 326; }
+.project[href$="queue2"]        { --ratio: 479 / 405; }
 
 .project__video,
-.project__block,
 .project__image {
   display: block;
   width: 100%;
@@ -515,7 +514,6 @@ img { display: block; max-width: 100%; }
 }
 .project__video,
 .project__image { object-fit: cover; object-position: center; }
-.project__block { background: #d33c27; }
 
 .project__body {
   display: flex;
