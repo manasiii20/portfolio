@@ -1,0 +1,375 @@
+/* ==========================================================================
+   Play area — builds on styles.css (frame, nav, chips, cursor, tokens)
+   ========================================================================== */
+
+.chip--nav.is-current { color: var(--blue); font-weight: 500; }
+
+/* ---- intro ---------------------------------------------------------------- */
+.play-hero {
+  position: relative;
+  min-height: 520px;
+  padding: 96px var(--pad) 120px;
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;   /* the lanyard can swing, but not out of the section */
+}
+
+.play-title {
+  max-width: 640px;
+  margin: 22px 0 0;
+  font-size: 34px;
+  line-height: 46px;
+  font-weight: 400;
+  letter-spacing: .01em;
+  color: var(--ink);
+}
+
+.play-title__fun { color: var(--blue); }
+
+/* layering: the strap passes behind the words, the name tag in front of them */
+.play-hero .chip--label,
+.play-title,
+.play-hint { position: relative; z-index: 2; }
+.lanyard__strap { z-index: 1; }
+.lanyard__tag { z-index: 3; }
+
+/* every verb is a little toy; letters get wrapped in spans by play.js */
+.verb,
+.play-title__fun {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline-offset: 4px;
+}
+.verb .l,
+.play-title__fun .l { display: inline-block; white-space: pre; }
+
+/* build: letters drop in and stack like blocks */
+.verb--build.is-on .l {
+  animation: stack .7s cubic-bezier(.3, 1.6, .5, 1) both;
+  animation-delay: calc(var(--i) * 70ms);
+}
+@keyframes stack {
+  0%   { transform: translateY(-1.1em) rotate(var(--r)); opacity: 0; }
+  55%  { transform: translateY(.08em) rotate(0deg); opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+
+/* animate: letters ride a wave for as long as you hover */
+.verb--animate.is-on .l {
+  animation: wave .9s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 80ms);
+}
+@keyframes wave {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-.28em); }
+}
+
+/* create: a hand-drawn scribble is drawn under it, and it stays */
+.verb__scribble {
+  position: absolute;
+  left: -2%;
+  bottom: -.18em;
+  width: 104%;
+  height: .42em;
+  overflow: visible;
+  pointer-events: none;
+}
+.verb__scribble path {
+  fill: none;
+  stroke: var(--select);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-dasharray: 160;
+  stroke-dashoffset: 160;
+  transition: stroke-dashoffset .9s cubic-bezier(.6, .1, .3, 1);
+}
+.verb--create.is-on .verb__scribble path,
+.verb--create.is-done .verb__scribble path { stroke-dashoffset: 0; }
+
+/* for the fun of it: every letter does its own little hop */
+.play-title__fun.is-on .l {
+  animation: hop .6s cubic-bezier(.3, 1.6, .5, 1) both;
+  animation-delay: calc(var(--i) * 30ms);
+}
+@keyframes hop {
+  0%   { transform: none; }
+  40%  { transform: translateY(-.35em) rotate(var(--r)); }
+  100% { transform: none; }
+}
+
+.play-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  font-family: var(--font-hand);
+  font-size: 17px;
+  letter-spacing: .04em;
+  color: var(--ink-hand);
+}
+.play-hint img { width: 18px; height: auto; transform: rotate(120deg); }
+
+.play-hero__note {
+  position: absolute;
+  left: var(--pad);
+  bottom: 24px;
+  font-family: var(--font-note);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: .03em;
+  color: var(--ink-soft);
+}
+
+/* ---- the lanyard ----------------------------------------------------------- */
+.lanyard {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.lanyard__strap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 200px;
+  margin-left: -9px;
+  transform-origin: 50% 0;
+  background: #1d1d22;
+  overflow: hidden;
+  box-shadow: 0 6px 14px -8px rgba(0, 0, 0, .4);
+}
+.lanyard__strap span {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  writing-mode: vertical-rl;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+  color: #f4f4f6;
+}
+
+.lanyard__tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 280px;
+  margin-left: -140px;
+  transform-origin: 50% 0;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+  filter: drop-shadow(0 14px 14px rgba(40, 40, 70, .16));
+}
+.lanyard__tag.is-dragging { cursor: grabbing; }
+.lanyard__tag img { display: block; width: 100%; height: auto; border-radius: 10px; }
+
+.lanyard__clip {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 34px;
+  height: 18px;
+  margin-left: -17px;
+  border-radius: 5px;
+  background: linear-gradient(#e7e8ec, #b9bbc4);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+  z-index: 1;
+}
+
+/* ---- the shelf ------------------------------------------------------------- */
+.shelf {
+  padding: 56px var(--pad) 72px;
+  border-bottom: 1px solid var(--line);
+}
+
+.shelf__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.shelf__filters { display: flex; flex-wrap: wrap; gap: 10px; }
+.shelf__filters .chip--hat { padding: 6px 13px; }
+.shelf__filters .chip--hat.is-on {
+  background: #fff;
+  color: var(--blue);
+  box-shadow: inset 0 0 0 1px var(--select);   /* the selected pill gets the yellow selection edge */
+}
+
+.shelf__count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #a5a5a5;
+}
+
+.shelf__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 56px 40px;
+  align-items: start;
+}
+
+.toy { transition: opacity .3s ease, transform .3s ease; }
+.toy.is-leaving { opacity: 0; transform: translateY(8px); }
+
+.toy__media {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--ratio);
+  padding: 0;
+  overflow: hidden;
+  background: #f3f3f5;
+}
+
+.toy__poster,
+.toy__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.toy__video { opacity: 0; transition: opacity .25s ease; }
+.toy.is-playing .toy__video { opacity: 1; }
+
+.toy__media--empty {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 90% at 20% 10%, color-mix(in srgb, var(--tint) 30%, #fff), transparent 60%),
+    color-mix(in srgb, var(--tint) 14%, #fff);
+}
+.toy__soon {
+  position: relative;
+  z-index: 1;
+  padding: 5px 11px;
+  background: #fff;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #a5a5a5;
+}
+
+.toy__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.toy__tags li {
+  padding: 6px 12px;
+  background: var(--chip);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 14.4px;
+  color: var(--ink-mono);
+}
+
+.toy__title {
+  margin: 14px 0 0;
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: .03em;
+  color: #616269;
+}
+
+.toy__line {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: .02em;
+  color: #6b6e7a;
+}
+
+.shelf__note {
+  margin-top: 56px;
+  font-family: var(--font-note);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: .03em;
+  color: var(--ink-soft);
+}
+
+/* ---- theatre: one thing, big ---------------------------------------------- */
+.theatre {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 48px 24px;
+  background: rgba(255, 255, 255, .94);
+  backdrop-filter: blur(6px);
+  animation: fade-in .2s ease;
+}
+.theatre[hidden] { display: none; }
+@keyframes fade-in { from { opacity: 0; } }
+
+.theatre__stage {
+  width: min(1100px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.theatre__media {
+  position: relative;
+  width: 100%;
+  max-height: 68vh;
+  aspect-ratio: var(--ratio, 16 / 9);
+  margin: 0 auto;
+  background: #f3f3f5;
+  overflow: hidden;
+}
+.theatre__media img,
+.theatre__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.theatre__controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.theatre__count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #a5a5a5;
+}
+.theatre__close { margin-left: auto; }
+
+/* ---- responsive ------------------------------------------------------------ */
+@media (max-width: 1199px) {
+  .play-title { font-size: 30px; line-height: 42px; }
+  .lanyard__tag { width: 230px; margin-left: -115px; }
+}
+
+@media (max-width: 899px) {
+  .shelf__grid { grid-template-columns: 1fr; gap: 44px; }
+  .play-hero { min-height: 620px; padding-top: 64px; }
+}
+
+@media (max-width: 640px) {
+  .play-title { font-size: 25px; line-height: 35px; }
+  .play-hero { min-height: 0; padding-top: 236px; padding-bottom: 96px; }
+  .lanyard__tag { width: 190px; margin-left: -95px; }
+  .lanyard__strap { width: 14px; margin-left: -7px; }
+  .toy__tags li { font-size: 11px; padding: 5px 10px; }
+  .toy__line { font-size: 13px; line-height: 19px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .verb .l, .play-title__fun .l { animation: none !important; }
+}

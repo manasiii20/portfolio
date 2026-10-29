@@ -67,7 +67,7 @@ function swapTo(next) {
 }
 
 // once settled, hand the width back to the content
-[box, ...pills].forEach((el) =>
+[box, ...pills].filter(Boolean).forEach((el) =>
   el.addEventListener("transitionend", (e) => {
     if (e.propertyName === "width") el.style.width = "";
   })
@@ -76,7 +76,7 @@ function swapTo(next) {
 pills.forEach((pill, i) =>
   pill.addEventListener("click", () => swapTo((current + i + 1) % HATS.length))
 );
-render();
+if (box) render(); // the hats only live on the home page
 
 /* ==========================================================================
    Sticky notes — pick up, drag anywhere, drop.
@@ -176,7 +176,7 @@ if (finePointer.matches) {
 
     const target = e.target instanceof Element ? e.target : null;
     const dragging = document.querySelector(".sticky.is-dragging");
-    cursor.classList.toggle("is-move", Boolean(dragging || target?.closest(".sticky")));
+    cursor.classList.toggle("is-move", Boolean(dragging || target?.closest(".sticky, [data-drag]")));
 
     const tagged = target?.closest("[data-cursor-tag]");
     cursor.classList.toggle("has-tag", Boolean(tagged));
