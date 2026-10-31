@@ -5,46 +5,11 @@
 (() => {
   const prefersCalm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---- the heading: each verb acts out what it means ------------------------ */
-  document.querySelectorAll("[data-verb]").forEach((word) => {
-    // wrap each letter so it can move on its own (the scribble svg stays put)
-    [...word.childNodes].forEach((node) => {
-      if (node.nodeType !== Node.TEXT_NODE) return;
-      const frag = document.createDocumentFragment();
-      [...node.textContent].forEach((ch, i) => {
-        const l = document.createElement("span");
-        l.className = "l";
-        l.textContent = ch;
-        l.style.setProperty("--i", i);
-        l.style.setProperty("--r", `${Math.round((Math.random() - 0.5) * 40)}deg`);
-        frag.append(l);
-      });
-      node.replaceWith(frag);
-    });
-
-    const kind = word.dataset.verb;
-    const start = () => {
-      word.classList.remove("is-on");
-      void word.offsetWidth; // restart the animation every time
-      word.classList.add("is-on");
-      if (kind === "create") word.classList.add("is-done"); // the scribble stays once drawn
-    };
-    const stop = () => {
-      // the wave stops when you leave; the one-shot ones finish on their own
-      if (kind === "animate") word.classList.remove("is-on");
-    };
-
-    word.addEventListener("mouseenter", start);
-    word.addEventListener("mouseleave", stop);
-    word.addEventListener("focus", start);
-    word.addEventListener("blur", stop);
-    word.addEventListener("click", () => (kind === "animate" && word.classList.contains("is-on") ? stop() : start()));
-  });
-
-  /* ---- the lanyard: a name tag on an elastic strap -------------------------- */
+  /* ---- the lanyard: a name tag on an elastic strap ------------------------ */
   const hero = document.querySelector(".play-hero");
   const strap = document.querySelector(".lanyard__strap");
   const tag = document.querySelector(".lanyard__tag");
+  const note = document.querySelector(".lanyard__note");
 
   if (hero && strap && tag) {
     const GRAVITY = 2200; // px/s²
@@ -54,7 +19,7 @@
     let rest = 150; // strap length before it stretches
     let pos = { x: 0, y: 0 };
     let vel = { x: 0, y: 0 };
-    let drag = null;
+    let drag = false;
     let last = 0;
     let running = false;
 
@@ -62,8 +27,10 @@
       const w = hero.clientWidth;
       const narrow = w < 700;
       // on phones it hangs on a short strap above the heading, clear of the words
-      anchor = { x: narrow ? w - 120 : w * 0.74, y: 0 };
+      anchor = { x: narrow ? w - 120 : w * 0.76, y: 0 };
       rest = narrow ? 36 : 150;
+      // the note sits just left of the strap
+      if (note) note.style.transform = `translate(${anchor.x - note.offsetWidth - 26}px, 0)`;
     };
 
     const draw = () => {
@@ -97,7 +64,7 @@
         pos.x += vel.x * dt;
         pos.y += vel.y * dt;
         // keep it inside the section
-        const maxY = hero.clientHeight - tag.offsetHeight - 30;
+        const maxY = hero.clientHeight - tag.offsetHeight - 20;
         if (pos.y > maxY) { pos.y = maxY; vel.y *= -0.4; }
         if (pos.y < 10) { pos.y = 10; vel.y = Math.abs(vel.y) * 0.4; }
       }
@@ -117,8 +84,7 @@
 
     layout();
     // it arrives from the side and swings into place
-    pos = prefersCalm ? { x: anchor.x, y: rest + 40 } : { x: anchor.x + 170, y: 70 };
-    vel = { x: 0, y: 0 };
+    pos = prefersCalm ? { x: anchor.x, y: rest + 10 } : { x: anchor.x + 170, y: 70 };
     draw();
     setTimeout(wake, prefersCalm ? 0 : 500);
 
@@ -151,7 +117,7 @@
     });
     const release = () => {
       if (!drag) return;
-      drag = null;
+      drag = false;
       tag.classList.remove("is-dragging");
       // a flick carries through, but not so hard it flies off
       vel.x = Math.max(-2400, Math.min(2400, vel.x));
@@ -167,71 +133,24 @@
     });
   }
 
-  /* ---- the shelf: filters ---------------------------------------------------- */
+  /* ---- the shelf: videos loop like the work section ------------------------ */
   const toys = [...document.querySelectorAll(".toy")];
-  const count = document.querySelector("[data-count]");
-  const filters = [...document.querySelectorAll("[data-filter]")];
-
-  filters.forEach((btn) =>
-    btn.addEventListener("click", () => {
-      const kind = btn.dataset.filter;
-      filters.forEach((b) => b.classList.toggle("is-on", b === btn));
-      const shown = toys.filter((t) => kind === "all" || t.dataset.kind === kind);
-      toys.forEach((t) => {
-        const show = shown.includes(t);
-        if (show && t.hidden) {
-          t.hidden = false;
-          t.classList.add("is-leaving");
-          requestAnimationFrame(() => requestAnimationFrame(() => t.classList.remove("is-leaving")));
-        } else if (!show && !t.hidden) {
-          t.hidden = true;
-        }
-      });
-      count.textContent = String(shown.length).padStart(2, "0");
-    })
-  );
-
-  /* ---- the shelf: calm by default, the one you hover plays ------------------- */
-  const play = (toy) => {
+  toys.forEach((toy) => {
     const v = toy.querySelector(".toy__video");
-    if (!v || !v.dataset.src) return;
-    if (!v.src) v.src = v.dataset.src;
-    v.play().then(() => toy.classList.add("is-playing")).catch(() => {});
-  };
-  const pause = (toy) => {
-    const v = toy.querySelector(".toy__video");
-    if (!v || !v.src) return;
-    v.pause();
-    toy.classList.remove("is-playing");
-  };
+    if (v?.dataset.src) {
+      v.src = v.dataset.src;
+      v.play().catch(() => {});
+    }
+  });
 
-  const canHover = window.matchMedia("(hover: hover)").matches;
-  if (canHover) {
-    toys.forEach((toy) => {
-      const media = toy.querySelector(".toy__media");
-      media.addEventListener("mouseenter", () => play(toy));
-      media.addEventListener("mouseleave", () => pause(toy));
-    });
-  } else if ("IntersectionObserver" in window) {
-    // on phones there's no hover: whichever card sits in the middle of the screen plays
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => (e.isIntersecting ? play(e.target) : pause(e.target))),
-      { rootMargin: "-35% 0px -35% 0px" }
-    );
-    toys.forEach((t) => io.observe(t));
-  }
-
-  /* ---- theatre: click a card to see it big, with nothing else around ---------- */
+  /* ---- theatre: click a card to watch it big, with nothing else around ----- */
   const theatre = document.querySelector(".theatre");
   const stage = theatre?.querySelector(".theatre__media");
   let open = -1;
 
-  const visibleToys = () => toys.filter((t) => !t.hidden);
-
   function show(index) {
-    const list = visibleToys();
-    open = (index + list.length) % list.length;
-    const toy = list[open];
+    open = (index + toys.length) % toys.length;
+    const toy = toys[open];
     const media = toy.querySelector(".toy__media");
     const video = toy.querySelector(".toy__video");
     const poster = toy.querySelector(".toy__poster");
@@ -245,23 +164,18 @@
       stage.append(v);
     } else if (poster) {
       stage.append(poster.cloneNode());
-    } else {
-      stage.append(media.querySelector(".toy__soon").cloneNode(true));
-      stage.style.display = "grid";
-      stage.style.placeItems = "center";
     }
 
     theatre.querySelector("[data-theatre-tags]").innerHTML = toy.querySelector(".toy__tags").innerHTML;
     theatre.querySelector("[data-theatre-title]").textContent = toy.querySelector(".toy__title").textContent;
     theatre.querySelector("[data-theatre-line]").textContent = toy.querySelector(".toy__line").textContent;
-    theatre.querySelector("[data-theatre-count]").textContent = `${String(open + 1).padStart(2, "0")} / ${String(list.length).padStart(2, "0")}`;
+    theatre.querySelector("[data-theatre-count]").textContent = `${String(open + 1).padStart(2, "0")} / ${String(toys.length).padStart(2, "0")}`;
   }
 
   function openTheatre(toy) {
-    toys.forEach(pause);
     theatre.hidden = false;
     document.body.style.overflow = "hidden";
-    show(visibleToys().indexOf(toy));
+    show(toys.indexOf(toy));
     theatre.querySelector("[data-theatre='close']").focus();
   }
 
@@ -269,7 +183,7 @@
     theatre.hidden = true;
     stage.replaceChildren();
     document.body.style.overflow = "";
-    visibleToys()[open]?.querySelector(".toy__media").focus();
+    toys[open]?.querySelector(".toy__media").focus();
     open = -1;
   }
 

@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Geist+Mono:wght@300;400;500;600&family=Google+Sans+Flex:wght@400;500&family=Google+Sans:ital,wght@1,400&display=swap" />
-  <link rel="stylesheet" href="css/styles.css?v=20261029a" />
-  <link rel="stylesheet" href="css/play.css?v=20261029a" />
+  <link rel="stylesheet" href="css/styles.css?v=20261031a" />
+  <link rel="stylesheet" href="css/play.css?v=20261031a" />
   <link rel="icon" href="assets/flower.png" />
 </head>
 <body>
@@ -29,19 +29,12 @@
     </header>
 
     <main>
-      <!-- ================= intro: a heading you can play with ================= -->
+      <!-- ================= intro ================= -->
       <section class="play-hero">
         <p class="chip chip--label">the play area</p>
 
-        <h1 class="play-title" aria-label="I build tools, animate, create; for the fun of it :)">
-          <span aria-hidden="true">I <span class="verb verb--build" data-verb="build" tabindex="0">build</span> tools, <span class="verb verb--animate" data-verb="animate" tabindex="0">animate</span>,<br />
-          <span class="verb verb--create" data-verb="create" tabindex="0">create<svg class="verb__scribble" viewBox="0 0 120 18" preserveAspectRatio="none"><path d="M3 11c12-5 22 4 34 0s20-8 32-2 22 5 31 1 12-5 17-3" /></svg></span>; <span class="play-title__fun" data-verb="fun" tabindex="0">for the fun of it</span> :)</span>
-        </h1>
-
-        <div class="play-hint" aria-hidden="true">
-          <img src="assets/arrow.png" alt="" width="22" height="27" />
-          <p>psst, poke the words :)</p>
-        </div>
+        <h1 class="play-title">i design for the love of it,<br />and it shows ;)</h1>
+        <p class="play-intro">tools, toys and motion pieces I make between projects, mostly to find out what happens.</p>
 
         <!-- the name tag from hello, i'm_ hangs on a lanyard you can tug -->
         <div class="lanyard" aria-hidden="true">
@@ -50,65 +43,38 @@
             <span class="lanyard__clip"></span>
             <img src="assets/play-nametag.webp" alt="" draggable="false" width="600" height="409" />
           </div>
+          <p class="lanyard__note">made with hello, i'm_<br />give it a tug ;)</p>
         </div>
-        <p class="play-hero__note">*it's a name tag from hello, i'm_. give it a tug ;)</p>
       </section>
 
-      <!-- ================= the toy shelf ================= -->
+      <!-- ================= the shelf ================= -->
       <section class="shelf" aria-label="Play projects">
-        <div class="shelf__bar">
-          <div class="shelf__filters" role="group" aria-label="Filter by kind">
-            <button class="chip chip--hat is-on" type="button" data-filter="all">all</button>
-            <button class="chip chip--hat" type="button" data-filter="tools">tools</button>
-            <button class="chip chip--hat" type="button" data-filter="motion">motion</button>
-            <button class="chip chip--hat" type="button" data-filter="objects">3d &amp; objects</button>
-          </div>
-          <p class="shelf__count"><span data-count>04</span> things on the shelf</p>
-        </div>
-
         <div class="shelf__grid">
-          <article class="toy" data-kind="tools">
-            <button class="toy__media" type="button" data-cursor-tag="watch ▶" style="--ratio: 421 / 236">
-              <img class="toy__poster" src="assets/play-hello.webp" alt="" loading="lazy" />
-              <video class="toy__video" muted loop playsinline preload="none" data-src=""></video>
+          <article class="toy">
+            <button class="toy__media" type="button" data-cursor-tag="watch it big ▶" style="--ratio: 489 / 275">
+              <img class="toy__poster" src="assets/play-hello.webp" alt="" />
+              <video class="toy__video" muted loop playsinline autoplay data-src=""></video>
             </button>
             <ul class="toy__tags"><li>built &amp; shipped in 24 hours</li><li>made with Claude</li></ul>
             <h2 class="toy__title">hello, i'm_</h2>
             <p class="toy__line">a name-tag maker: answer a few questions, wear the badge</p>
           </article>
 
-          <article class="toy" data-kind="tools">
-            <button class="toy__media" type="button" data-cursor-tag="watch ▶" style="--ratio: 421 / 236">
-              <img class="toy__poster" src="assets/play-gradient.webp" alt="" loading="lazy" />
-              <video class="toy__video" muted loop playsinline preload="none" data-src=""></video>
+          <article class="toy">
+            <button class="toy__media" type="button" data-cursor-tag="watch it big ▶" style="--ratio: 489 / 275">
+              <img class="toy__poster" src="assets/play-gradient.webp" alt="" />
+              <video class="toy__video" muted loop playsinline autoplay data-src=""></video>
             </button>
             <ul class="toy__tags"><li>shipped &amp; live!</li><li>made with Figma + Claude</li></ul>
             <h2 class="toy__title">Gradient</h2>
-            <p class="toy__line">a little studio for drawing, tuning and exporting mesh gradients</p>
-          </article>
-
-          <article class="toy" data-kind="motion">
-            <button class="toy__media toy__media--empty" type="button" data-cursor-tag="watch ▶" style="--ratio: 4 / 3; --tint: #a54d14">
-              <span class="toy__soon">show reel goes here</span>
-              <video class="toy__video" muted loop playsinline preload="none" data-src=""></video>
-            </button>
-            <ul class="toy__tags"><li>motion</li><li>made in Blender</li></ul>
-            <h2 class="toy__title">00:00:00</h2>
-            <p class="toy__line">a 3D motion study, placeholder line for now</p>
-          </article>
-
-          <article class="toy" data-kind="objects">
-            <button class="toy__media toy__media--empty" type="button" data-cursor-tag="watch ▶" style="--ratio: 4 / 3; --tint: #a19f94">
-              <span class="toy__soon">show reel goes here</span>
-              <video class="toy__video" muted loop playsinline preload="none" data-src=""></video>
-            </button>
-            <ul class="toy__tags"><li>3d &amp; objects</li><li>weekend build</li></ul>
-            <h2 class="toy__title">tiny wooden kitchen</h2>
-            <p class="toy__line">placeholder line for now</p>
+            <p class="toy__line">a little studio for building, animating and exporting mesh gradients</p>
           </article>
         </div>
 
-        <p class="shelf__note">*more experiments brewing, check back soon ;)</p>
+        <div class="shelf__end">
+          <p class="shelf__note">*more experiments brewing, check back soon ;)</p>
+          <a class="chip chip--label shelf__cta" href="index.html#contact">got an idea worth playing with? let's make it →</a>
+        </div>
       </section>
     </main>
 
@@ -138,7 +104,7 @@
     <span class="cursor__tag"></span>
   </div>
 
-  <script src="js/main.js?v=20261029a"></script>
-  <script src="js/play.js?v=20261029a"></script>
+  <script src="js/main.js?v=20261031a"></script>
+  <script src="js/play.js?v=20261031a"></script>
 </body>
 </html>
